@@ -1,0 +1,10 @@
+{% extends '_base.html' %}
+{% load django_vite %}
+
+{% block title %}
+Taskite | {{ props.project.name }}
+{% endblock title %}
+
+{% block assets %}
+{% vite_asset 'js/projects/detail.js' %}
+{% endblock assets %}

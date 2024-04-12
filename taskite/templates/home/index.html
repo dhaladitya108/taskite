@@ -1,0 +1,10 @@
+{% extends '_base.html' %}
+{% load django_vite %}
+
+{% block title %}
+Taskite
+{% endblock title %}
+
+{% block assets %}
+{% vite_asset 'js/home/index.js' %}
+{% endblock assets %}
