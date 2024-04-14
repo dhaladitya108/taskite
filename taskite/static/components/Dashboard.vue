@@ -1,87 +1,66 @@
 <template>
-  <a-layout>
-    <a-layout-sider v-model:collapsed="collapsed" :trigger="null" collapsible>
+  <a-layout style="min-height: 100vh">
+    <a-layout-sider v-model:collapsed="collapsed" collapsible>
       <div class="logo" />
-      <a-menu v-model:selectedKeys="selectedPage" theme="dark" mode="inline">
+      <a-menu v-model:selectedKeys="selectedKeys" theme="dark" mode="inline">
         <a-menu-item key="home">
-          <a href="/">
-            <HomeOutlined />
-            <span>Home</span>
-          </a>
+          <pie-chart-outlined />
+          <span>Home</span>
         </a-menu-item>
         <a-menu-item key="projects">
-          <ProjectOutlined />
+          <desktop-outlined />
           <span>Projects</span>
         </a-menu-item>
-        <a-menu-item key="members">
-          <UserOutlined />
-          <span>Members</span>
+        <a-sub-menu key="settings">
+          <template #title>
+            <span>
+              <user-outlined />
+              <span>Settings</span>
+            </span>
+          </template>
+          <a-menu-item key="settings-members">Members</a-menu-item>
+          <a-menu-item key="settings-profile">Profile</a-menu-item>
+          <a-menu-item key="settings-preferences">Preferences</a-menu-item>
+        </a-sub-menu>
+        <a-menu-item key="logout">
+          <file-outlined />
+          <span>Logout</span>
         </a-menu-item>
       </a-menu>
     </a-layout-sider>
-    <a-layout style="height: 100vh">
-      <a-layout-header style="background: #fff; padding: 0">
-        <MenuUnfoldOutlined
-          v-if="collapsed"
-          class="trigger"
-          @click="() => (collapsed = !collapsed)"
-        />
-        <MenuFoldOutlined
-          v-else
-          class="trigger"
-          @click="() => (collapsed = !collapsed)"
-        />
-      </a-layout-header>
-      <a-layout-content
-        :style="{
-          margin: '24px 16px',
-          padding: '24px',
-          background: '#fff',
-          overflowX: 'auto'
-        }"
-      >
+    <a-layout>
+      <a-layout-content style="margin: 16px 16px; overflow-x: auto;">
         <slot></slot>
       </a-layout-content>
+      <a-layout-footer style="text-align: center">
+        Ant Design ©2018 Created by Ant UED
+      </a-layout-footer>
     </a-layout>
   </a-layout>
 </template>
-<script setup>
-import { ref } from "vue";
+<script lang="ts" setup>
 import {
-  MenuUnfoldOutlined,
-  MenuFoldOutlined,
+  PieChartOutlined,
+  DesktopOutlined,
   UserOutlined,
-  VideoCameraOutlined,
-  UploadOutlined,
-  HomeOutlined,
-  ProjectOutlined
+  TeamOutlined,
+  FileOutlined,
 } from "@ant-design/icons-vue";
-const props = defineProps(["selectedPage"]);
-
-const selectedPage = ref([props.selectedPage]);
-
-const collapsed = ref(false);
+import { ref } from "vue";
+const collapsed = ref<boolean>(false);
+const selectedKeys = ref<string[]>(["1"]);
 </script>
-<style>
-.trigger {
-  font-size: 18px;
-  line-height: 64px;
-  padding: 0 24px;
-  cursor: pointer;
-  transition: color 0.3s;
-}
-
-.trigger:hover {
-  color: #1890ff;
-}
-
+<style scoped>
 .logo {
   height: 32px;
-  background: rgba(255, 255, 255, 0.3);
   margin: 16px;
+  background: rgba(255, 255, 255, 0.3);
 }
 
 .site-layout .site-layout-background {
   background: #fff;
+}
+[data-theme="dark"] .site-layout .site-layout-background {
+  background: #141414;
 }
 </style>

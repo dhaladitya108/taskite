@@ -5,6 +5,8 @@ from rest_framework.views import APIView
 from rest_framework.permissions import IsAuthenticated
 
 from taskite.models import Project, State, Task, User
+from taskite.mixins import ProjectFetchMixin
+from taskite.permissions import ProjectMemberAPIPermission
 
 
 class AssigneeSerializer(serializers.ModelSerializer):
@@ -22,6 +24,7 @@ class TaskSerializer(serializers.ModelSerializer):
             "id",
             "task_id",
             "name",
+            "description",
             "priority",
             "order",
             "sequence",
@@ -41,24 +44,26 @@ class StateSerializer(serializers.ModelSerializer):
         return TaskSerializer(obj.state_tasks, many=True).data
 
 
-class StateListCreateAPIView(APIView):
-    permission_classes = [IsAuthenticated]
+class StateListCreateAPIView(ProjectFetchMixin, APIView):
+    permission_classes = [IsAuthenticated, ProjectMemberAPIPermission]
 
-    def get(self, request, project_id):
-        project = Project.objects.filter(id=project_id).first()
-        if not project:
-            return Response(
-                data={"detail": "No project found with the given project id."},
-                status=status.HTTP_400_BAD_REQUEST,
-            )
+    def get(self, request, *args, **kwargs):
+        project = request.project
+        task_queryset = Task.objects.order_by("order").prefetch_related("assignees")
+        priorities = request.query_params.getlist("priorities[]")
+        assignees = request.query_params.getlist("assignees[]")
+        if len(priorities) > 0:
+            task_queryset = task_queryset.filter(priority__in=priorities)
+
+        if len(assignees) > 0:
+            task_queryset = task_queryset.filter(task_assignees__user__in=assignees)
+
         states = (
             State.objects.filter(project=project)
             .prefetch_related(
                 Prefetch(
                     "state_tasks",
-                    queryset=Task.objects.order_by("order").prefetch_related(
-                        "assignees"
-                    ),
+                    queryset=task_queryset,
                 )
             )
             .order_by("order")
@@ -67,29 +72,3 @@ class StateListCreateAPIView(APIView):
             data=StateSerializer(states, many=True).data, status=status.HTTP_200_OK
         )
 
-
-class StateTaskListCreateAPIView(APIView):
-    permission_classes = [IsAuthenticated]
-
-    def get(self, request, project_id, pk):
-        project = Project.objects.filter(id=project_id).first()
-        if not project:
-            return Response(
-                data={"detail": "No project found with the given project id."},
-                status=status.HTTP_400_BAD_REQUEST,
-            )
-        state = State.objects.filter(project=project, id=pk).first()
-        if not state:
-            return Response(
-                data={"detail": "No state found with the given state id."},
-                status=status.HTTP_400_BAD_REQUEST,
-            )
-
-        tasks = (
-            Task.objects.filter(project=project, state=state)
-            .order_by("order")
-            .prefetch_related("state_tasks")
-        )
-        return Response(
-            data=TaskSerializer(tasks, many=True).data, status=status.HTTP_200_OK
-        )

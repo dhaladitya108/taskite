@@ -5,6 +5,8 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.views import APIView
 
 from taskite.models import Project, ProjectMember, User
+from taskite.permissions import ProjectMemberAPIPermission
+from taskite.mixins import ProjectFetchMixin
 
 
 class ProjectSerializer(serializers.ModelSerializer):
@@ -16,7 +18,7 @@ class ProjectSerializer(serializers.ModelSerializer):
 class MemberSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ["id", "email", "full_name"]
+        fields = ["id", "email", "full_name", "display_name", "created_at"]
 
 
 class ProjectCreateSerializer(serializers.Serializer):
@@ -30,9 +32,14 @@ class ProjectListCreateAPIView(APIView):
     permission_classes = [IsAuthenticated]
 
     def get(self, request):
-        user_projects = Project.objects.filter(project_member__user=request.user)
-        public_projects = Project.objects.filter(visibility=Project.Visibility.PUBLIC)
-        projects = user_projects.union(public_projects, all=False)
+        if request.user.role == "admin":
+            projects = Project.objects.all()
+        else:
+            user_projects = Project.objects.filter(project_member__user=request.user)
+            public_projects = Project.objects.filter(
+                visibility=Project.Visibility.PUBLIC
+            )
+            projects = user_projects.union(public_projects, all=False)
 
         serializer = ProjectSerializer(projects, many=True)
         return Response(data=serializer.data, status=status.HTTP_200_OK)
@@ -64,17 +71,12 @@ class ProjectListCreateAPIView(APIView):
         )
 
 
-class ProjectMemberListAPIView(APIView):
-    permission_classes = [IsAuthenticated]
+class ProjectMemberListAPIView(ProjectFetchMixin, APIView):
+    permission_classes = [IsAuthenticated, ProjectMemberAPIPermission]
 
-    def get(self, request, pk):
-        project = Project.objects.filter(id=pk).first()
-        if not project:
-            return Response(
-                data={"detail": "No project found with the given project id."},
-                status=status.HTTP_400_BAD_REQUEST,
-            )
-        members = project.members.all()
+    def get(self, request, *args, **kwargs):
+        project = request.project
+        members = project.members.all().order_by("full_name")
         return Response(
             data=MemberSerializer(members, many=True).data, status=status.HTTP_200_OK
         )

@@ -24,7 +24,7 @@ class Task(BaseTimestampModel):
     )
     start_date = models.DateField(blank=True, null=True)
     target_date = models.DateField(blank=True, null=True)
-    order = models.FloatField(default=50000, blank=True, editable=False)
+    order = models.FloatField(default=50000, blank=True)
     sequence = models.IntegerField(default=1, blank=True, editable=False)
 
     archived_at = models.DateTimeField(blank=True, null=True)
@@ -58,14 +58,14 @@ class Task(BaseTimestampModel):
                 self.sequence = last_sequence + 1
 
             self.task_id = f"{self.project.project_id}-{self.sequence}"
-
-            last_order = (
-                Task.objects.filter(project=self.project, state=self.state)
-                .aggregate(largest=models.Max("order"))
-                .get("largest")
-            )
-            if last_order is not None:
-                self.order = last_order + 10000
+            if not self.order:
+                last_order = (
+                    Task.objects.filter(project=self.project, state=self.state)
+                    .aggregate(largest=models.Max("order"))
+                    .get("largest")
+                )
+                if last_order is not None:
+                    self.order = last_order + 10000
         return super().save(*args, **kwargs)
 
 

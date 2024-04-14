@@ -6,7 +6,7 @@ from taskite.views.projects import ProjectDetailView, ProjectCreateView
 
 urlpatterns = [
     path("admin/", admin.site.urls),
-    path("api/", include("taskite.api")),
+    path("api/", include("taskite.views.api")),
     path("login/", LoginView.as_view(), name="login"),
     path("logout/", LogoutView.as_view(), name="logout"),
     path("create/", ProjectCreateView.as_view(), name="project-create"),
