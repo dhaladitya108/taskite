@@ -18,7 +18,7 @@ class Project(BaseTimestampModel):
         max_length=10, choices=Visibility.choices, default=Visibility.PRIVATE
     )
     created_by = models.ForeignKey("User", on_delete=models.SET_NULL, null=True)
-    
+
     members = models.ManyToManyField(
         "User",
         through="ProjectMember",
@@ -42,7 +42,9 @@ class Project(BaseTimestampModel):
 
     def generate_project_id(self):
         # Remove all characters except alphanumeric and spaces.
-        clean_text = "".join(char for char in self.name.lower() if char.isalnum() or char.isspace())
+        clean_text = "".join(
+            char for char in self.name.lower() if char.isalnum() or char.isspace()
+        )
 
         # Split the text into words.
         words = clean_text.strip().split()
@@ -90,4 +92,4 @@ class ProjectMember(BaseTimestampModel):
         ]
 
     def __str__(self) -> str:
-        return f"{self.user.email} <{self.project.name}>"
+        return f"{self.id}"

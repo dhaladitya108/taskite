@@ -6,13 +6,11 @@ import { ref, onMounted, computed, watch } from "vue";
 import {
   stateListAPI,
   projectMemberListAPI,
-  stateTaskListAPI,
   taskUpdateAPI,
 } from "@/api";
 import { VueDraggable } from "vue-draggable-plus";
 
-const props = defineProps(["project"]);
-
+const props = defineProps(["project", "organizationSettings"]);
 const project = ref(props.project);
 const members = ref([]);
 const states = ref([]);
@@ -62,9 +60,9 @@ const fetchMembers = async () => {
   }
 };
 
-const updateTask = async (task_id, taskDetails) => {
+const updateTask = async (task_id, data, params) => {
   try {
-    await taskUpdateAPI(project.value.id, task_id, taskDetails);
+    await taskUpdateAPI(project.value.id, task_id, data, params);
   } catch (error) {
     console.log(error);
   }
@@ -81,35 +79,33 @@ watch([selectedPriorities, selectedAssignees], async () => {
 
 function onUpdate(event, stateID) {
   const selectedState = states.value.find((s) => s.id === stateID);
-  switch (event.newIndex) {
-    case 0:
-      console.log("Dragged to first");
-      var selectedTask = selectedState.tasks[0];
+  const selectedTask = selectedState.tasks[event.newIndex];
 
-      updateTask(selectedTask.id, { order: parseFloat(selectedState.tasks[1].order) / 2 });
-      break;
-
-    case selectedState.tasks.length - 1:
-      console.log('Draaaag to end --- ')
-      var selectedTask = selectedState.tasks[selectedState.tasks.length - 1];
-
-      updateTask(selectedTask.id, { order: parseFloat(selectedState.tasks[1].order) + parseFloat(10000) });
-      break;
-
-    default:
-      console.log("Dragged --->");
-      break;
+  const params = {
+    "index": event.newIndex
   }
+
+  updateTask(selectedTask.id, {}, params);
 }
-function onAdd(event, newStateID) {}
+function onAdd(event, newStateID) {
+  const selectedState = states.value.find((s) => s.id === newStateID);
+  const selectedTask = selectedState.tasks[event.newIndex];
+
+  const params = {
+    "index": event.newIndex,
+    "state_id": newStateID
+  }
+
+  updateTask(selectedTask.id, {}, params);
+}
 function remove() {
   console.log("remove");
 }
 </script>
 
 <template>
-  <Dashboard selectedPage="projects">
-    <a-flex justify="space-between">
+  <Dashboard selectedPage="projects" :organizationSettings="organizationSettings">
+    <a-flex justify="space-between" style="padding: 10px;">
       <div></div>
       <div>
         <a-dropdown :trigger="['click']">

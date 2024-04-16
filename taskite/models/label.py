@@ -19,4 +19,4 @@ class Label(BaseTimestampModel):
         ]
 
     def __str__(self) -> str:
-        return f"{self.name} <{self.project.name}>"
+        return f"{self.name} <{self.id}>"

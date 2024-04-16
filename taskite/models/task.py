@@ -1,4 +1,4 @@
-from django.db import models
+from django.db import models, transaction
 from taskite.models.base import BaseTimestampModel
 
 
@@ -24,7 +24,7 @@ class Task(BaseTimestampModel):
     )
     start_date = models.DateField(blank=True, null=True)
     target_date = models.DateField(blank=True, null=True)
-    order = models.FloatField(default=50000, blank=True)
+    order = models.FloatField(default=50000, blank=True, editable=False)
     sequence = models.IntegerField(default=1, blank=True, editable=False)
 
     archived_at = models.DateTimeField(blank=True, null=True)
@@ -45,7 +45,7 @@ class Task(BaseTimestampModel):
         ]
 
     def __str__(self) -> str:
-        return f"{self.name} <{self.project.name}>"
+        return f"{self.name} <{self.id}>"
 
     def save(self, *args, **kwargs):
         if self._state.adding:
@@ -68,6 +68,31 @@ class Task(BaseTimestampModel):
                     self.order = last_order + 10000
         return super().save(*args, **kwargs)
 
+    @transaction.atomic
+    def update_order(self, index):
+        total_index = self.state.state_tasks.all().order_by("order").count() - 1
+
+        if index == 0:
+            first_task = self.state.state_tasks.all().order_by("order").only("order")[0]
+            self.order = first_task.order / 2
+        elif index == total_index:
+            last_task = (
+                self.state.state_tasks.all()
+                .order_by("order")
+                .only("order")[total_index]
+            )
+            self.order = last_task.order + float(10000)
+        else:
+            previous_task = (
+                self.state.state_tasks.all().order_by("order").only("order")[index - 1]
+            )
+            next_task = (
+                self.state.state_tasks.all().order_by("order").only("order")[index]
+            )
+            self.order = (previous_task.order + next_task.order) / 2
+
+        self.save(update_fields=["order"])
+
 
 class TaskAssignee(BaseTimestampModel):
     task = models.ForeignKey(
@@ -89,11 +114,13 @@ class TaskAssignee(BaseTimestampModel):
         ordering = ("-created_at",)
 
     def __str__(self) -> str:
-        return f"{self.task.name} <{self.user.email}>"
+        return f"{self.task.name}"
 
 
 class TaskLabel(BaseTimestampModel):
-    task = models.ForeignKey("Task", on_delete=models.CASCADE, related_name="task_labels")
+    task = models.ForeignKey(
+        "Task", on_delete=models.CASCADE, related_name="task_labels"
+    )
     label = models.ForeignKey(
         "Label", on_delete=models.CASCADE, related_name="label_task_labels"
     )
@@ -107,3 +134,6 @@ class TaskLabel(BaseTimestampModel):
                 fields=["task_id", "label_id"], name="unique_task_label"
             )
         ]
+
+    def __str__(self) -> str:
+        return f"{self.label} <{self.id}>"

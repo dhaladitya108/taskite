@@ -73,6 +73,7 @@ TEMPLATES = [
                 "django.template.context_processors.request",
                 "django.contrib.auth.context_processors.auth",
                 "django.contrib.messages.context_processors.messages",
+                "taskite.context_processors.organization_settings"
             ],
         },
     },
@@ -89,9 +90,7 @@ DATABASES = {
     #     "ENGINE": "django.db.backends.sqlite3",
     #     "NAME": BASE_DIR / "db.sqlite3",
     # },
-    "default": dj_database_url.config(
-        default=os.environ.get("DATABASE_URL")
-    )
+    "default": dj_database_url.config(default=os.environ.get("DATABASE_URL"))
 }
 
 
@@ -162,4 +161,9 @@ LOGGING = {
             "handlers": ["console"],
         }
     },
+}
+
+ORGANIZATION_SETTINGS = {
+    "organization_name": "Acorn Globus",
+    "primary_color": "#1677ff",
 }

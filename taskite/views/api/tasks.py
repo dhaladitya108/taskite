@@ -1,10 +1,10 @@
+from django.db import transaction
 from rest_framework.response import Response
 from rest_framework import status, serializers
 from rest_framework.views import APIView
 from rest_framework.permissions import IsAuthenticated
-from rest_framework.generics import UpdateAPIView
 
-from taskite.models import Task, Project
+from taskite.models import Task, Project, State
 from taskite.permissions import ProjectMemberAPIPermission
 from taskite.mixins import ProjectFetchMixin
 from taskite.exceptions import TaskNotFoundAPIException
@@ -54,11 +54,22 @@ class TaskDetailUpdateDestroyAPIView(ProjectFetchMixin, APIView):
                 },
                 status=status.HTTP_400_BAD_REQUEST,
             )
-        data = serializer.validated_data
 
+        data = serializer.validated_data
         for attr, value in data.items():
             setattr(task, attr, value)
         task.save(update_fields=data.keys())
+
+        state_id = request.query_params.get("state_id", None)
+        if state_id:
+            state = State.objects.filter(project=request.project, id=state_id).first()
+            task.state = state
+            task.save(update_fields=["state"])
+
+        index = request.query_params.get("index", None)
+        if index:
+            task.update_order(index=int(index))
+
         return Response(
-            data={"detail": "Task order has been updated."}, status=status.HTTP_200_OK
+            data={"detail": "Task has been updated"}, status=status.HTTP_200_OK
         )
