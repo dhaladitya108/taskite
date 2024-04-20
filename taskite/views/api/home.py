@@ -1,17 +1,10 @@
 from django.contrib.auth import login
-from rest_framework.viewsets import ViewSet
-from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework import status
-from rest_framework import serializers
 from rest_framework.views import APIView
 
 from taskite.models import User
-
-
-class LoginSerializer(serializers.Serializer):
-    email = serializers.EmailField()
-    password = serializers.CharField()
+from taskite.serializers.home import LoginSerializer
 
 
 class LoginAPIView(APIView):

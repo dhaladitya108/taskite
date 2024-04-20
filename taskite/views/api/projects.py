@@ -1,31 +1,13 @@
 from django.db import transaction
 from rest_framework.response import Response
-from rest_framework import status, serializers
+from rest_framework import status
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.views import APIView
 
-from taskite.models import Project, ProjectMember, User
+from taskite.models import Project, ProjectMember
 from taskite.permissions import ProjectMemberAPIPermission
 from taskite.mixins import ProjectFetchMixin
-
-
-class ProjectSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Project
-        fields = ["id", "name", "slug", "visibility", "created_at", "updated_at"]
-
-
-class MemberSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = User
-        fields = ["id", "username", "email", "full_name", "display_name", "created_at"]
-
-
-class ProjectCreateSerializer(serializers.Serializer):
-    name = serializers.CharField()
-    identifier = serializers.SlugField(required=False)
-    visibility = serializers.CharField()
-    description = serializers.CharField(required=False)
+from taskite.serializers.project import ProjectSerializer, MemberSerializer, ProjectCreateSerializer
 
 
 class ProjectListCreateAPIView(APIView):

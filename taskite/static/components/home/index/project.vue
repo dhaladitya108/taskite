@@ -1,5 +1,5 @@
 <script setup>
-const { project } = defineProps(["project"]);
+const { project } = defineProps(['project'])
 </script>
 
 <template>

@@ -3,32 +3,11 @@ from rest_framework import status, serializers
 from rest_framework.views import APIView
 from rest_framework.permissions import IsAuthenticated
 
-from taskite.models import Task, Project, State, User
+from taskite.models import Task, State
 from taskite.permissions import ProjectMemberAPIPermission
 from taskite.mixins import ProjectFetchMixin
 from taskite.exceptions import TaskNotFoundAPIException
-
-
-class TaskUpdateSerializer(serializers.Serializer):
-    name = serializers.CharField(required=False)
-    description = serializers.CharField(required=False)
-    priority = serializers.ChoiceField(choices=Task.Priority.choices, required=False)
-    order = serializers.FloatField(required=False)
-
-
-class TaskSerializer(serializers.ModelSerializer):
-    
-    class Meta:
-        model = Task
-        fields = [
-            "id",
-            "name",
-            "description",
-            "priority",
-            "order",
-            "sequence",
-            "created_at",
-        ]
+from taskite.serializers.task import TaskUpdateSerializer, TaskSerializer
 
 
 class TaskListCreateAPIView(APIView):

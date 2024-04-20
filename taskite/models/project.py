@@ -99,7 +99,6 @@ class ProjectMember(BaseUUIDTimestampModel):
     @receiver(post_save, sender=Project)
     def add_project_owner_to_member(sender, created: bool, instance: Project, **kwargs):
         if created:
-            if instance.visibility != Project.Visibility.PUBLIC:
-                project_member = ProjectMember(user=instance.created_by, project=instance)
-                project_member.role = ProjectMember.Role.ADMIN
-                project_member.save()
+            project_member = ProjectMember(user=instance.created_by, project=instance)
+            project_member.role = ProjectMember.Role.ADMIN
+            project_member.save()

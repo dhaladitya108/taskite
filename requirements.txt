@@ -6,3 +6,4 @@ django-vite==3.0.4
 python-dotenv==1.0.1
 dj-database-url==2.1.0
 pillow==10.3.0
+django-storages==1.14.2

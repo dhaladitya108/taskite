@@ -1,34 +1,35 @@
 <script setup>
-import { computed } from "vue";
-import { createAvatar } from '@dicebear/core';
-import { initials } from '@dicebear/collection';
+import { computed } from 'vue'
+import { createAvatar } from '@dicebear/core'
+import { initials } from '@dicebear/collection'
 
-const avatar = (seed) => createAvatar(initials, {
-  "seed": seed,
-  backgroundColor: ["1677ff"]
-  // ... other options
-}).toDataUriSync();
+const avatar = (seed) =>
+  createAvatar(initials, {
+    seed: seed,
+    backgroundColor: ['1677ff'],
+    // ... other options
+  }).toDataUriSync()
 
-const { task } = defineProps(["task"]);
+const { task } = defineProps(['task'])
 
 const priorityTagColor = computed(() => {
   switch (task.priority) {
-    case "urgent":
-      return "red";
+    case 'urgent':
+      return 'red'
 
-    case "high":
-      return "orange";
+    case 'high':
+      return 'orange'
 
-    case "medium":
-      return "blue";
+    case 'medium':
+      return 'blue'
 
-    case "low":
-      return "secondary";
+    case 'low':
+      return 'secondary'
 
     default:
-      return "";
+      return ''
   }
-});
+})
 </script>
 
 <template>
@@ -48,9 +49,13 @@ const priorityTagColor = computed(() => {
     <div>{{ task.name }}</div>
     <a-flex justify="end">
       <a-avatar-group>
-        <a-tooltip :title="assignee.display_name" placement="top" v-for="assignee in task.assignees" :key="assignee.id">
-          <a-avatar size="small" :src="avatar(assignee.full_name)">
-          </a-avatar>
+        <a-tooltip
+          :title="assignee.display_name"
+          placement="top"
+          v-for="assignee in task.assignees"
+          :key="assignee.id"
+        >
+          <a-avatar size="small" :src="avatar(assignee.full_name)"> </a-avatar>
         </a-tooltip>
       </a-avatar-group>
     </a-flex>

@@ -13,11 +13,6 @@ class ProjectSerializer(serializers.ModelSerializer):
         fields = ["id", "slug", "name", "description", "created_at"]
 
 
-class ProjectCreateView(LoginRequiredMixin, View):
-    def get(self, request):
-        return render(request, "projects/create.html")
-
-
 class ProjectDetailView(LoginRequiredMixin, View):
     def get(self, request, slug):
         project = Project.objects.filter(slug=slug).first()

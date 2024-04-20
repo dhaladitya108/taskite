@@ -1,22 +1,22 @@
 <script setup>
-import axios from "axios";
-import { reactive } from "vue";
-import { message } from 'ant-design-vue';
-import { loginAPI } from '@/api'
+import axios from 'axios'
+import { reactive } from 'vue'
+import { message } from 'ant-design-vue'
+import { loginAPI } from '@/utils/api'
 
-const props = defineProps(["next"]);
+const props = defineProps(['next'])
 const loginForm = reactive({
-  email: "",
-  password: "",
-});
+  email: '',
+  password: '',
+})
 
 const handleLogin = async (values) => {
-    try {
-      await loginAPI(values)
-      window.location.href = props.next
-    } catch (error) {
-      message.warning(error.response.data.detail)
-    }
+  try {
+    await loginAPI(values)
+    window.location.href = props.next
+  } catch (error) {
+    message.warning(error.response.data.detail)
+  }
 }
 </script>
 

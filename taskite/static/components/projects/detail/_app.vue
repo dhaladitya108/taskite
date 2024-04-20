@@ -1,87 +1,83 @@
 <script setup>
-import Dashboard from "@/components/Dashboard.vue";
-import Task from "@/components/projects/_task.vue";
+import { ref, onMounted, computed, watch } from 'vue'
+import { stateListAPI, projectMemberListAPI, taskUpdateAPI } from '@/utils/api'
+import { VueDraggable } from 'vue-draggable-plus'
 
-import { ref, onMounted, computed, watch } from "vue";
-import {
-  stateListAPI,
-  projectMemberListAPI,
-  taskUpdateAPI,
-} from "@/api";
-import { VueDraggable } from "vue-draggable-plus";
+import dashboard from '@/components/layouts/dashboard.vue'
+import Task from '@/components/projects/detail/task.vue'
 
-const props = defineProps(["project", "organizationSettings"]);
-const project = ref(props.project);
-const members = ref([]);
-const states = ref([]);
-const selectedPriorities = ref([]);
-const selectedAssignees = ref([]);
+const props = defineProps(['project', 'organizationSettings'])
+const project = ref(props.project)
+const members = ref([])
+const states = ref([])
+const selectedPriorities = ref([])
+const selectedAssignees = ref([])
 
 const priorityOptions = [
-  { label: "Urgent", value: "urgent" },
-  { label: "High", value: "high" },
-  { label: "Medium", value: "medium" },
-  { label: "Low", value: "low" },
-];
+  { label: 'Urgent', value: 'urgent' },
+  { label: 'High', value: 'high' },
+  { label: 'Medium', value: 'medium' },
+  { label: 'Low', value: 'low' },
+]
 
 const assigneeOptions = computed(() => {
   return members.value.map((member) => {
     return {
       label: member.display_name,
       value: member.id,
-    };
-  });
-});
+    }
+  })
+})
 
 const fetchStates = async () => {
-  const params = {};
+  const params = {}
   if (selectedPriorities.value.length > 0) {
-    params["priorities"] = selectedPriorities.value;
+    params['priorities'] = selectedPriorities.value
   }
 
   if (selectedAssignees.value.length > 0) {
-    params["assignees"] = selectedAssignees.value;
+    params['assignees'] = selectedAssignees.value
   }
 
   try {
-    const { data } = await stateListAPI(project.value.id, params);
-    states.value = data;
+    const { data } = await stateListAPI(project.value.id, params)
+    states.value = data
   } catch (error) {
-    console.log(error);
+    console.log(error)
   }
-};
+}
 
 const fetchMembers = async () => {
   try {
-    const { data } = await projectMemberListAPI(project.value.id);
-    members.value = data;
+    const { data } = await projectMemberListAPI(project.value.id)
+    members.value = data
   } catch (error) {
-    console.log(error);
+    console.log(error)
   }
-};
+}
 
-const updateTask = async (task_id, data, params) => {
-  try {
-    await taskUpdateAPI(project.value.id, task_id, data, params);
-  } catch (error) {
-    console.log(error);
-  }
-};
+// const updateTask = async (task_id, data, params) => {
+//   try {
+//     await taskUpdateAPI(project.value.id, task_id, data, params);
+//   } catch (error) {
+//     console.log(error);
+//   }
+// };
 
 onMounted(() => {
-  fetchMembers();
-  fetchStates();
-});
+  fetchMembers()
+  fetchStates()
+})
 
 watch([selectedPriorities, selectedAssignees], async () => {
-  fetchStates();
-});
+  fetchStates()
+})
 
 function onUpdate(event, stateID) {
   console.log('Event :: ', event)
 
-  const selectedState = states.value.find((s) => s.id === stateID);
-  const selectedTask = selectedState.tasks[event.newIndex];
+  const selectedState = states.value.find((s) => s.id === stateID)
+  const selectedTask = selectedState.tasks[event.newIndex]
 
   // const params = {
   //   "index": event.newIndex
@@ -92,8 +88,8 @@ function onUpdate(event, stateID) {
 function onAdd(event, newStateID) {
   console.log('Event :: ', event)
 
-  const selectedState = states.value.find((s) => s.id === newStateID);
-  const selectedTask = selectedState.tasks[event.newIndex];
+  const selectedState = states.value.find((s) => s.id === newStateID)
+  const selectedTask = selectedState.tasks[event.newIndex]
 
   // const params = {
   //   "index": event.newIndex,
@@ -103,13 +99,16 @@ function onAdd(event, newStateID) {
   // updateTask(selectedTask.id, {}, params);
 }
 function remove() {
-  console.log("remove");
+  console.log('remove')
 }
 </script>
 
 <template>
-  <Dashboard selectedPage="projects" :organizationSettings="organizationSettings">
-    <a-flex justify="space-between" style="padding: 10px;">
+  <dashboard
+    selectedPage="projects"
+    :organizationSettings="organizationSettings"
+  >
+    <a-flex justify="space-between" style="padding: 10px">
       <div></div>
       <div>
         <a-dropdown :trigger="['click']">
@@ -156,7 +155,7 @@ function remove() {
         </div>
       </div>
     </a-flex>
-  </Dashboard>
+  </dashboard>
 </template>
 
 <style scoped>

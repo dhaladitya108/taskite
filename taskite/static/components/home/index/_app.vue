@@ -1,30 +1,30 @@
 <script setup>
-import { ref, onMounted } from "vue";
-import { projectListAPI } from "@/api";
-import Dashboard from "@/components/Dashboard.vue";
-import Project from "@/components/home/_project.vue";
+import { ref, onMounted } from 'vue'
+import { projectListAPI } from '@/utils/api'
+import dashboard from '@/components/layouts/dashboard.vue'
+import Project from '@/components/home/index/project.vue'
 
-const projects = ref([]);
-const projectSearchValue = ref("");
+const projects = ref([])
+const projectSearchValue = ref('')
 
 onMounted(async () => {
   try {
-    const { data } = await projectListAPI();
-    projects.value = data;
+    const { data } = await projectListAPI()
+    projects.value = data
   } catch (error) {
-    message.error("Failed to fetch projects");
+    message.error('Failed to fetch projects')
   }
-});
+})
 
 const searchProject = (searchValue) => {
-  console.log("use value", searchValue);
-  console.log("or use this.value", searchValue.value);
-};
+  console.log('use value', searchValue)
+  console.log('or use this.value', searchValue.value)
+}
 </script>
 
 <template>
-  <Dashboard selectedPage="home">
-    <div style="margin-bottom: 20px;">
+  <dashboard selectedPage="home">
+    <div style="margin-bottom: 20px">
       <a-flex justify="space-between">
         <a-input-search
           v-model:value="projectSearchValue"
@@ -48,5 +48,5 @@ const searchProject = (searchValue) => {
         </a-col>
       </a-row>
     </div>
-  </Dashboard>
+  </dashboard>
 </template>
