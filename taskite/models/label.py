@@ -1,9 +1,9 @@
 from django.db import models
 
-from taskite.models.base import BaseTimestampModel
+from taskite.models.base import BaseUUIDTimestampModel
 
 
-class Label(BaseTimestampModel):
+class Label(BaseUUIDTimestampModel):
     project = models.ForeignKey(
         "Project", on_delete=models.CASCADE, related_name="labels"
     )

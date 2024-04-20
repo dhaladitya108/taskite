@@ -78,25 +78,29 @@ watch([selectedPriorities, selectedAssignees], async () => {
 });
 
 function onUpdate(event, stateID) {
+  console.log('Event :: ', event)
+
   const selectedState = states.value.find((s) => s.id === stateID);
   const selectedTask = selectedState.tasks[event.newIndex];
 
-  const params = {
-    "index": event.newIndex
-  }
+  // const params = {
+  //   "index": event.newIndex
+  // }
 
-  updateTask(selectedTask.id, {}, params);
+  // updateTask(selectedTask.id, {}, params);
 }
 function onAdd(event, newStateID) {
+  console.log('Event :: ', event)
+
   const selectedState = states.value.find((s) => s.id === newStateID);
   const selectedTask = selectedState.tasks[event.newIndex];
 
-  const params = {
-    "index": event.newIndex,
-    "state_id": newStateID
-  }
+  // const params = {
+  //   "index": event.newIndex,
+  //   "state_id": newStateID
+  // }
 
-  updateTask(selectedTask.id, {}, params);
+  // updateTask(selectedTask.id, {}, params);
 }
 function remove() {
   console.log("remove");

@@ -1,8 +1,8 @@
 from django.db import models, transaction
-from taskite.models.base import BaseTimestampModel
+from taskite.models.base import BaseUUIDTimestampModel
 
 
-class Task(BaseTimestampModel):
+class Task(BaseUUIDTimestampModel):
     class Priority(models.TextChoices):
         URGENT = ("urgent", "Urgent")
         HIGH = ("high", "High")
@@ -24,7 +24,7 @@ class Task(BaseTimestampModel):
     )
     start_date = models.DateField(blank=True, null=True)
     target_date = models.DateField(blank=True, null=True)
-    order = models.FloatField(default=50000, blank=True, editable=False)
+    order = models.FloatField(blank=True, editable=False)
     sequence = models.IntegerField(default=1, blank=True, editable=False)
 
     archived_at = models.DateTimeField(blank=True, null=True)
@@ -66,6 +66,8 @@ class Task(BaseTimestampModel):
                 )
                 if last_order is not None:
                     self.order = last_order + 10000
+                else:
+                    self.order = 50000
         return super().save(*args, **kwargs)
 
     @transaction.atomic
@@ -84,17 +86,17 @@ class Task(BaseTimestampModel):
             self.order = last_task.order + float(10000)
         else:
             previous_task = (
-                self.state.state_tasks.all().order_by("order").only("order")[index - 1]
+                self.state.state_tasks.all().order_by("order").only("order")[index]
             )
             next_task = (
-                self.state.state_tasks.all().order_by("order").only("order")[index]
+                self.state.state_tasks.all().order_by("order").only("order")[index + 1]
             )
             self.order = (previous_task.order + next_task.order) / 2
 
         self.save(update_fields=["order"])
 
 
-class TaskAssignee(BaseTimestampModel):
+class TaskAssignee(BaseUUIDTimestampModel):
     task = models.ForeignKey(
         "Task", on_delete=models.CASCADE, related_name="task_assignees"
     )
@@ -117,7 +119,7 @@ class TaskAssignee(BaseTimestampModel):
         return f"{self.task.name}"
 
 
-class TaskLabel(BaseTimestampModel):
+class TaskLabel(BaseUUIDTimestampModel):
     task = models.ForeignKey(
         "Task", on_delete=models.CASCADE, related_name="task_labels"
     )

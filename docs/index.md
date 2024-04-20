@@ -4,7 +4,7 @@ layout: home
 
 hero:
   name: "Taskite"
-  text: "A VitePress Site"
+  text: "Open source Task Management Tool."
   tagline: My great project tagline
   actions:
     - theme: brand

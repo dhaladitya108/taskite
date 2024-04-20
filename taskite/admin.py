@@ -19,7 +19,7 @@ class UserCreationForm(forms.ModelForm):
 
     class Meta:
         model = User
-        fields = ["email", "full_name"]
+        fields = ["username", "email", "full_name"]
 
     def clean_password2(self):
         # Check that the two password entries match
@@ -48,7 +48,7 @@ class UserChangeForm(forms.ModelForm):
 
     class Meta:
         model = User
-        fields = ["email", "password", "full_name", "is_active", "is_superuser"]
+        fields = ["username", "email", "password", "full_name", "is_active", "is_superuser"]
 
 
 class UserAdmin(BaseUserAdmin):
@@ -59,7 +59,7 @@ class UserAdmin(BaseUserAdmin):
     # The fields to be used in displaying the User model.
     # These override the definitions on the base UserAdmin
     # that reference specific fields on auth.User.
-    list_display = ["email", "full_name", "is_superuser"]
+    list_display = ["username", "email", "full_name", "is_superuser"]
     list_filter = ["is_superuser"]
     fieldsets = [
         (None, {"fields": ["email", "password"]}),

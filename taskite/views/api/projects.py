@@ -18,7 +18,7 @@ class ProjectSerializer(serializers.ModelSerializer):
 class MemberSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ["id", "email", "full_name", "display_name", "created_at"]
+        fields = ["id", "username", "email", "full_name", "display_name", "created_at"]
 
 
 class ProjectCreateSerializer(serializers.Serializer):

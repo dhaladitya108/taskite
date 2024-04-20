@@ -1,4 +1,4 @@
-from .base import BaseTimestampModel
+from .base import BaseTimestampModel, BaseUUIDTimestampModel
 from .user import User
 from .project import Project, ProjectMember
 from .state import State

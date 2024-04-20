@@ -1,10 +1,9 @@
-from django.db import transaction
 from rest_framework.response import Response
 from rest_framework import status, serializers
 from rest_framework.views import APIView
 from rest_framework.permissions import IsAuthenticated
 
-from taskite.models import Task, Project, State
+from taskite.models import Task, Project, State, User
 from taskite.permissions import ProjectMemberAPIPermission
 from taskite.mixins import ProjectFetchMixin
 from taskite.exceptions import TaskNotFoundAPIException
@@ -18,6 +17,7 @@ class TaskUpdateSerializer(serializers.Serializer):
 
 
 class TaskSerializer(serializers.ModelSerializer):
+    
     class Meta:
         model = Task
         fields = [
@@ -71,5 +71,6 @@ class TaskDetailUpdateDestroyAPIView(ProjectFetchMixin, APIView):
             task.update_order(index=int(index))
 
         return Response(
-            data={"detail": "Task has been updated"}, status=status.HTTP_200_OK
+            data={"detail": "Task has been updated", "task": TaskSerializer(task).data},
+            status=status.HTTP_200_OK,
         )

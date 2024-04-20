@@ -1,10 +1,12 @@
 from django.db import models
 from django.utils.text import slugify
+from django.dispatch import receiver
+from django.db.models.signals import post_save
 
-from taskite.models.base import BaseTimestampModel
+from taskite.models.base import BaseUUIDTimestampModel
 
 
-class Project(BaseTimestampModel):
+class Project(BaseUUIDTimestampModel):
     class Visibility(models.TextChoices):
         PRIVATE = ("private", "Private")
         PUBLIC = ("public", "Public")
@@ -60,7 +62,7 @@ class Project(BaseTimestampModel):
         return slug[:4].upper()
 
 
-class ProjectMember(BaseTimestampModel):
+class ProjectMember(BaseUUIDTimestampModel):
     class Role(models.TextChoices):
         ADMIN = ("admin", "Admin")
         MEMBER = ("member", "Member")
@@ -93,3 +95,11 @@ class ProjectMember(BaseTimestampModel):
 
     def __str__(self) -> str:
         return f"{self.id}"
+
+    @receiver(post_save, sender=Project)
+    def add_project_owner_to_member(sender, created: bool, instance: Project, **kwargs):
+        if created:
+            if instance.visibility != Project.Visibility.PUBLIC:
+                project_member = ProjectMember(user=instance.created_by, project=instance)
+                project_member.role = ProjectMember.Role.ADMIN
+                project_member.save()

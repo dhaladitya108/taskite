@@ -9,8 +9,8 @@ from taskite.views.api.tasks import TaskListCreateAPIView, TaskDetailUpdateDestr
 urlpatterns = [
     path("home/login/", LoginAPIView.as_view()),
     path("projects/", ProjectListCreateAPIView.as_view()),
-    path("projects/<int:project_id>/members/", ProjectMemberListAPIView.as_view()),
-    path("projects/<int:project_id>/states/", StateListCreateAPIView.as_view()),
-    path("projects/<int:project_id>/tasks/", TaskListCreateAPIView.as_view()),
-    path("projects/<int:project_id>/tasks/<int:task_id>/", TaskDetailUpdateDestroyAPIView.as_view()),
+    path("projects/<uuid:project_id>/members/", ProjectMemberListAPIView.as_view()),
+    path("projects/<uuid:project_id>/states/", StateListCreateAPIView.as_view()),
+    path("projects/<uuid:project_id>/tasks/", TaskListCreateAPIView.as_view()),
+    path("projects/<uuid:project_id>/tasks/<uuid:task_id>/", TaskDetailUpdateDestroyAPIView.as_view()),
 ]

@@ -12,7 +12,7 @@ from taskite.permissions import ProjectMemberAPIPermission
 class AssigneeSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ["id", "display_name", "email", "full_name", "created_at"]
+        fields = ["id", "username", "display_name", "email", "full_name", "created_at"]
 
 
 class TaskSerializer(serializers.ModelSerializer):
