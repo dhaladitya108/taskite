@@ -1,12 +1,13 @@
+from django.db import transaction
 from rest_framework.response import Response
-from rest_framework import status, serializers
+from rest_framework import status
 from rest_framework.views import APIView
 from rest_framework.permissions import IsAuthenticated
 
 from taskite.models import Task, State
 from taskite.permissions import ProjectMemberAPIPermission
 from taskite.mixins import ProjectFetchMixin
-from taskite.exceptions import TaskNotFoundAPIException
+from taskite.exceptions import TaskNotFoundAPIException, StateNotFoundAPIException, InvalidRequestBodyAPIException
 from taskite.serializers.task import TaskUpdateSerializer, TaskSerializer
 
 
@@ -27,27 +28,18 @@ class TaskDetailUpdateDestroyAPIView(ProjectFetchMixin, APIView):
 
         serializer = TaskUpdateSerializer(data=request.data)
         if not serializer.is_valid():
-            return Response(
-                data={
-                    "detail": "Invalid details provided for updating the given task."
-                },
-                status=status.HTTP_400_BAD_REQUEST,
-            )
-
+            raise InvalidRequestBodyAPIException
+        
         data = serializer.validated_data
+
+        state_id = data.get("state_id", None)
+        if state_id:
+            if not State.objects.filter(project=request.project, id=state_id).exists():
+                raise StateNotFoundAPIException
+
         for attr, value in data.items():
             setattr(task, attr, value)
         task.save(update_fields=data.keys())
-
-        state_id = request.query_params.get("state_id", None)
-        if state_id:
-            state = State.objects.filter(project=request.project, id=state_id).first()
-            task.state = state
-            task.save(update_fields=["state"])
-
-        index = request.query_params.get("index", None)
-        if index:
-            task.update_order(index=int(index))
 
         return Response(
             data={"detail": "Task has been updated", "task": TaskSerializer(task).data},

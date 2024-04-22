@@ -4,6 +4,7 @@ from taskite.models import Task
 
 
 class TaskUpdateSerializer(serializers.Serializer):
+    state_id = serializers.UUIDField(required=False)
     name = serializers.CharField(required=False)
     description = serializers.CharField(required=False)
     priority = serializers.ChoiceField(choices=Task.Priority.choices, required=False)

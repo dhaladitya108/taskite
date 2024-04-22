@@ -5,40 +5,17 @@ import { VueDraggable } from 'vue-draggable-plus'
 
 import dashboard from '@/components/layouts/dashboard.vue'
 import Task from '@/components/projects/detail/task.vue'
+import Filters from '@/components/projects/detail/filters.vue'
 
-const props = defineProps(['project', 'organizationSettings'])
+const props = defineProps(['project'])
 const project = ref(props.project)
 const members = ref([])
 const states = ref([])
+
 const selectedPriorities = ref([])
 const selectedAssignees = ref([])
 
-const priorityOptions = [
-  { label: 'Urgent', value: 'urgent' },
-  { label: 'High', value: 'high' },
-  { label: 'Medium', value: 'medium' },
-  { label: 'Low', value: 'low' },
-]
-
-const assigneeOptions = computed(() => {
-  return members.value.map((member) => {
-    return {
-      label: member.display_name,
-      value: member.id,
-    }
-  })
-})
-
-const fetchStates = async () => {
-  const params = {}
-  if (selectedPriorities.value.length > 0) {
-    params['priorities'] = selectedPriorities.value
-  }
-
-  if (selectedAssignees.value.length > 0) {
-    params['assignees'] = selectedAssignees.value
-  }
-
+const fetchStates = async (params={}) => {
   try {
     const { data } = await stateListAPI(project.value.id, params)
     states.value = data
@@ -56,14 +33,6 @@ const fetchMembers = async () => {
   }
 }
 
-// const updateTask = async (task_id, data, params) => {
-//   try {
-//     await taskUpdateAPI(project.value.id, task_id, data, params);
-//   } catch (error) {
-//     console.log(error);
-//   }
-// };
-
 onMounted(() => {
   fetchMembers()
   fetchStates()
@@ -73,68 +42,82 @@ watch([selectedPriorities, selectedAssignees], async () => {
   fetchStates()
 })
 
-function onUpdate(event, stateID) {
-  console.log('Event :: ', event)
+async function onUpdate(event, state_id) {
+  const selected_state = states.value.find((s) => s.id === state_id)
+  const current_task = selected_state.tasks[event.newIndex]
+  const updated_data = {}
 
-  const selectedState = states.value.find((s) => s.id === stateID)
-  const selectedTask = selectedState.tasks[event.newIndex]
+  if (event.newIndex === 0) {
+    let next_task = selected_state.tasks[event.newIndex + 1]
+    updated_data['order'] = next_task.order / 2
+  } else if (event.newIndex === selected_state.tasks.length - 1) {
+    let previous_task = selected_state.tasks[event.newIndex - 1]
+    updated_data['order'] = previous_task.order / 2
+  } else {
+    let next_task = selected_state.tasks[event.newIndex + 1]
+    let previous_task = selected_state.tasks[event.newIndex - 1]
+    updated_data['order'] = (next_task.order + previous_task.order) / 2
+  }
 
-  // const params = {
-  //   "index": event.newIndex
-  // }
-
-  // updateTask(selectedTask.id, {}, params);
+  try {
+    const { data } = await taskUpdateAPI(
+      project.value.id,
+      current_task.id,
+      updated_data
+    )
+    current_task.order = data.task.order
+  } catch (error) {
+    console.log(error)
+  }
 }
-function onAdd(event, newStateID) {
-  console.log('Event :: ', event)
+async function onAdd(event, state_id) {
+  const selected_state = states.value.find((s) => s.id === state_id)
+  const current_task = selected_state.tasks[event.newIndex]
+  const updated_data = { state_id: selected_state.id }
 
-  const selectedState = states.value.find((s) => s.id === newStateID)
-  const selectedTask = selectedState.tasks[event.newIndex]
+  if (event.newIndex === 0) {
+    let next_task = selected_state.tasks[event.newIndex + 1]
+    updated_data['order'] = next_task.order / 2
+  } else if (event.newIndex === selected_state.tasks.length - 1) {
+    let previous_task = selected_state.tasks[event.newIndex - 1]
+    updated_data['order'] = previous_task.order + 10000
+  } else {
+    let next_task = selected_state.tasks[event.newIndex + 1]
+    let previous_task = selected_state.tasks[event.newIndex - 1]
+    updated_data['order'] = (next_task.order + previous_task.order) / 2
+  }
 
-  // const params = {
-  //   "index": event.newIndex,
-  //   "state_id": newStateID
-  // }
-
-  // updateTask(selectedTask.id, {}, params);
+  try {
+    const { data } = await taskUpdateAPI(
+      project.value.id,
+      current_task.id,
+      updated_data
+    )
+    current_task.order = data.task.order
+  } catch (error) {
+    console.log(error)
+  }
 }
-function remove() {
-  console.log('remove')
+
+function reloadTasksWithNewFilters(newFilters) {
+  const params = {}
+  if (newFilters.selectedPriorities.length > 0) {
+    params['priorities'] = newFilters.selectedPriorities
+  }
+
+  if (newFilters.selectedAssignees.length > 0) {
+    params['assignees'] = newFilters.selectedAssignees
+  }
+  fetchStates(params)
 }
 </script>
 
 <template>
-  <dashboard
-    selectedPage="projects"
-    :organizationSettings="organizationSettings"
-  >
+  <dashboard selectedPage="projects">
     <a-flex justify="space-between" style="padding: 10px">
       <div></div>
       <div>
-        <a-dropdown :trigger="['click']">
-          <a-button type="primary" size="small"> Filters </a-button>
-          <template #overlay>
-            <a-card size="small" style="width: 200px">
-              <div>Priorities</div>
-              <a-flex vertical>
-                <a-checkbox-group
-                  v-model:value="selectedPriorities"
-                  :options="priorityOptions"
-                >
-                </a-checkbox-group>
-              </a-flex>
-
-              <div>Assignees</div>
-              <a-flex vertical>
-                <a-checkbox-group
-                  v-model:value="selectedAssignees"
-                  :options="assigneeOptions"
-                >
-                </a-checkbox-group>
-              </a-flex>
-            </a-card>
-          </template>
-        </a-dropdown>
+        <Filters :members="members" @filterChange="reloadTasksWithNewFilters" />
       </div>
     </a-flex>
 
@@ -148,7 +131,6 @@ function remove() {
             group="tasks"
             @update="(event) => onUpdate(event, state.id)"
             @add="(event) => onAdd(event, state.id)"
-            @remove="remove"
           >
             <Task v-for="task in state.tasks" :key="task.id" :task="task" />
           </VueDraggable>

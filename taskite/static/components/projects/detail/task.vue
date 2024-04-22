@@ -33,7 +33,7 @@ const priorityTagColor = computed(() => {
 </script>
 
 <template>
-  <a-card style="width: 265px" size="small">
+  <a-card id="task-card" size="small">
     <a-flex justify="space-between">
       <div>
         <a-typography-text type="secondary" style="font-size: smaller">{{
@@ -62,4 +62,8 @@ const priorityTagColor = computed(() => {
   </a-card>
 </template>
 
-<style scoped></style>
+<style scoped>
+#task-card {
+  width: 320px;
+}
+</style>
