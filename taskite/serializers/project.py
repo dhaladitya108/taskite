@@ -6,7 +6,7 @@ from taskite.models import Project, User
 class ProjectSerializer(serializers.ModelSerializer):
     class Meta:
         model = Project
-        fields = ["id", "name", "slug", "visibility", "created_at", "updated_at"]
+        fields = ["id", "name", "slug", "visibility", "created_at"]
 
 
 class MemberSerializer(serializers.ModelSerializer):

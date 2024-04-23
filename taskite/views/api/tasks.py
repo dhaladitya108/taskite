@@ -11,9 +11,24 @@ from taskite.exceptions import TaskNotFoundAPIException, StateNotFoundAPIExcepti
 from taskite.serializers.task import TaskUpdateSerializer, TaskSerializer
 
 
-class TaskListCreateAPIView(APIView):
+class TaskListCreateAPIView(ProjectFetchMixin, APIView):
+    permission_classes = [IsAuthenticated, ProjectMemberAPIPermission]
+
     def get(self, request, project_id):
         return Response(data={}, status=status.HTTP_200_OK)
+    
+    def post(self, request, *args, **kwargs):
+        project = request.project
+        state_id = request.data.get("state_id", None)
+        state = State.objects.filter(project=project, id=state_id).first()
+        if not state:
+            return StateNotFoundAPIException
+        
+        task = Task(**request.data)
+        task.state = state,
+        task.project = project
+
+        return Response(data={}, status=status.HTTP_201_CREATED)
 
 
 class TaskDetailUpdateDestroyAPIView(ProjectFetchMixin, APIView):

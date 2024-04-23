@@ -1,14 +1,6 @@
 <script setup>
 import { computed } from 'vue'
-import { createAvatar } from '@dicebear/core'
-import { initials } from '@dicebear/collection'
-
-const avatar = (seed) =>
-  createAvatar(initials, {
-    seed: seed,
-    backgroundColor: ['1677ff'],
-    // ... other options
-  }).toDataUriSync()
+import { generateAvatar } from '@/utils/generators'
 
 const { task } = defineProps(['task'])
 
@@ -55,7 +47,7 @@ const priorityTagColor = computed(() => {
           v-for="assignee in task.assignees"
           :key="assignee.id"
         >
-          <a-avatar size="small" :src="avatar(assignee.full_name)"> </a-avatar>
+          <a-avatar size="small" :src="generateAvatar(assignee.full_name)"> </a-avatar>
         </a-tooltip>
       </a-avatar-group>
     </a-flex>

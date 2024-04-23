@@ -4,6 +4,7 @@ from django.urls import path, include
 from taskite.views.home import LoginView, IndexView, LogoutView
 from taskite.views.projects import ProjectDetailView
 
+# fmt: off
 urlpatterns = [
     # Public API Endpoints
     path("api/v1/", include("taskite.views.api.v1")),

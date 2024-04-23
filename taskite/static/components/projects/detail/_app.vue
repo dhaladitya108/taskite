@@ -1,26 +1,38 @@
 <script setup>
 import { ref, onMounted, computed, watch } from 'vue'
-import { stateListAPI, projectMemberListAPI, taskUpdateAPI } from '@/utils/api'
+import {
+  stateTaskListAPI,
+  projectMemberListAPI,
+  taskUpdateAPI,
+  labelListAPI
+} from '@/utils/api'
 import { VueDraggable } from 'vue-draggable-plus'
 
 import dashboard from '@/components/layouts/dashboard.vue'
-import Task from '@/components/projects/detail/task.vue'
-import Filters from '@/components/projects/detail/filters.vue'
+import task from '@/components/projects/detail/task.vue'
+import taskFilters from '@/components/projects/detail/task_filters.vue'
+import loader from '@/components/common/loader.vue'
 
 const props = defineProps(['project'])
+
+const loading = ref(false)
 const project = ref(props.project)
 const members = ref([])
 const states = ref([])
-
+const labels = ref([])
 const selectedPriorities = ref([])
 const selectedAssignees = ref([])
+const selectedLabels = ref([])
 
-const fetchStates = async (params={}) => {
+const fetchStates = async (params = {}) => {
   try {
-    const { data } = await stateListAPI(project.value.id, params)
+    loading.value = true
+    const { data } = await stateTaskListAPI(project.value.id, params)
     states.value = data
   } catch (error) {
     console.log(error)
+  } finally {
+    loading.value = false
   }
 }
 
@@ -33,12 +45,22 @@ const fetchMembers = async () => {
   }
 }
 
+const fetchLabels = async () => {
+  try {
+    const { data } = await labelListAPI(project.value.id)
+    labels.value = data
+  } catch (error) {
+    console.log(error)
+  }
+}
+
 onMounted(() => {
   fetchMembers()
+  fetchLabels()
   fetchStates()
 })
 
-watch([selectedPriorities, selectedAssignees], async () => {
+watch([selectedPriorities, selectedAssignees, selectedLabels], async () => {
   fetchStates()
 })
 
@@ -100,6 +122,8 @@ async function onAdd(event, state_id) {
 }
 
 function reloadTasksWithNewFilters(newFilters) {
+  console.log(newFilters)
+
   const params = {}
   if (newFilters.selectedPriorities.length > 0) {
     params['priorities'] = newFilters.selectedPriorities
@@ -108,20 +132,37 @@ function reloadTasksWithNewFilters(newFilters) {
   if (newFilters.selectedAssignees.length > 0) {
     params['assignees'] = newFilters.selectedAssignees
   }
+
+  if (newFilters.selectedLabels.length > 0) {
+    params['labels'] = newFilters.selectedLabels
+  }
+
   fetchStates(params)
 }
 </script>
 
 <template>
   <dashboard selectedPage="projects">
-    <a-flex justify="space-between" style="padding: 10px">
-      <div></div>
+    <a-flex justify="space-between" style="margin-bottom: 15px">
       <div>
-        <Filters :members="members" @filterChange="reloadTasksWithNewFilters" />
+        <a-typography-title :level="4">{{ project.name }}</a-typography-title>
+      </div>
+      <div>
+        <task-filters
+          :members="members"
+          :labels="labels"
+          @filterChange="reloadTasksWithNewFilters"
+        />
+        <a-button type="primary">+ Add Task</a-button>
       </div>
     </a-flex>
 
-    <a-flex gap="middle" align="start">
+    <hr />
+
+    <a-flex justify="center" align="center" style="height: 90vh" v-if="loading">
+      <loader />
+    </a-flex>
+    <a-flex gap="middle" align="start" v-else>
       <div v-for="state in states" :key="state.id">
         <div>
           <a-typography-title :level="5">{{ state.name }}</a-typography-title>
@@ -132,8 +173,18 @@ function reloadTasksWithNewFilters(newFilters) {
             @update="(event) => onUpdate(event, state.id)"
             @add="(event) => onAdd(event, state.id)"
           >
-            <Task v-for="task in state.tasks" :key="task.id" :task="task" />
+            <task v-for="task in state.tasks" :key="task.id" :task="task" />
           </VueDraggable>
+
+          <div class="add-task-popover">
+            <a-popover :title="`Add task to ${state.name}`" trigger="click" placement="bottomLeft">
+              <template #content>
+                <p>Content</p>
+                <p>Content</p>
+              </template>
+              <a-typography-link>+ Add Task</a-typography-link>
+            </a-popover>
+          </div>
         </div>
       </div>
     </a-flex>
@@ -145,5 +196,10 @@ function reloadTasksWithNewFilters(newFilters) {
   display: flex;
   flex-direction: column;
   gap: 10px;
+}
+
+.add-task-popover {
+  margin: 5px;
+  padding: 5px
 }
 </style>

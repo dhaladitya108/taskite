@@ -7,7 +7,11 @@ from rest_framework.views import APIView
 from taskite.models import Project, ProjectMember
 from taskite.permissions import ProjectMemberAPIPermission
 from taskite.mixins import ProjectFetchMixin
-from taskite.serializers.project import ProjectSerializer, MemberSerializer, ProjectCreateSerializer
+from taskite.serializers.project import (
+    ProjectSerializer,
+    MemberSerializer,
+    ProjectCreateSerializer,
+)
 
 
 class ProjectListCreateAPIView(APIView):
@@ -62,3 +66,4 @@ class ProjectMemberListAPIView(ProjectFetchMixin, APIView):
         return Response(
             data=MemberSerializer(members, many=True).data, status=status.HTTP_200_OK
         )
+

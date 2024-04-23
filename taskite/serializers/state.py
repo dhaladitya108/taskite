@@ -27,6 +27,12 @@ class TaskSerializer(serializers.ModelSerializer):
 
 
 class StateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = State
+        fields = ["id", "name", "order", "color", "created_at"]
+
+
+class StateTaskSerializer(serializers.ModelSerializer):
     tasks = serializers.SerializerMethodField()
 
     class Meta:

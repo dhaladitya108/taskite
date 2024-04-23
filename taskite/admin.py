@@ -5,7 +5,7 @@ from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 from django.contrib.auth.forms import ReadOnlyPasswordHashField
 from django.core.exceptions import ValidationError
 
-from taskite.models import User, Project, ProjectMember, State, Task, TaskAssignee
+from taskite.models import User, Project, ProjectMember, State, Task, TaskAssignee, Label, TaskLabel
 
 
 class UserCreationForm(forms.ModelForm):
@@ -93,10 +93,14 @@ class StateAdminInline(admin.StackedInline):
     extra = 0
 
 
+class LabelAdminInline(admin.TabularInline):
+    model = Label
+    extra = 0
+
 @admin.register(Project)
 class ProjectAdmin(admin.ModelAdmin):
     list_display = ["name", "visibility", "created_at"]
-    inlines = [ProjectMemberInline, StateAdminInline]
+    inlines = [ProjectMemberInline, StateAdminInline, LabelAdminInline]
     raw_id_fields = ["created_by"]
     prepopulated_fields = {"slug": ["name"]}
 
@@ -106,10 +110,15 @@ class TaskAssigneeInline(admin.TabularInline):
     extra = 0
 
 
+class TaskLabelInline(admin.TabularInline):
+    model = TaskLabel
+    extra = 0
+
+
 @admin.register(Task)
 class TaskAdmin(admin.ModelAdmin):
     list_display = ["task_id", "project", "state", "priority", "created_at"]
-    inlines = [TaskAssigneeInline]
+    inlines = [TaskAssigneeInline, TaskLabelInline]
 
 
 # Now register the new UserAdmin...
