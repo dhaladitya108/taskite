@@ -4,14 +4,17 @@ import {
   stateTaskListAPI,
   projectMemberListAPI,
   taskUpdateAPI,
-  labelListAPI
+  labelListAPI,
 } from '@/utils/api'
 import { VueDraggable } from 'vue-draggable-plus'
+// import { OnClickOutside } from '@vueuse/components'
 
-import dashboard from '@/components/layouts/dashboard.vue'
-import task from '@/components/projects/detail/task.vue'
-import taskFilters from '@/components/projects/detail/task_filters.vue'
-import loader from '@/components/common/loader.vue'
+import DashboardLayout from '@/components/dashboard-layout.vue'
+import TaskCard from '@/components/projects/detail/task-card.vue'
+import TaskFilters from '@/components/projects/detail/task-filters.vue'
+import LoadingSpinner from '@/components/common/loading-spinner.vue'
+import TaskAddPopover from '@/components/projects/detail/task-add-popover.vue'
+import TaskAddForm from '@/components/projects/detail/task-add-form.vue'
 
 const props = defineProps(['project'])
 
@@ -23,6 +26,11 @@ const labels = ref([])
 const selectedPriorities = ref([])
 const selectedAssignees = ref([])
 const selectedLabels = ref([])
+const task_add_active_form = ref('')
+
+function close_task_add_form() {
+  task_add_active_form.value = ''
+}
 
 const fetchStates = async (params = {}) => {
   try {
@@ -139,10 +147,24 @@ function reloadTasksWithNewFilters(newFilters) {
 
   fetchStates(params)
 }
+
+function addNewTask(state_id, new_task) {
+  const selected_state = states.value.find((s) => s.id === state_id)
+  selected_state.tasks.push({
+    ...new_task,
+    assignees: [],
+  })
+
+  task_add_active_form.value = ''
+}
+
+function activate_task_add_form(state_id) {
+  task_add_active_form.value = state_id
+}
 </script>
 
 <template>
-  <dashboard selectedPage="projects">
+  <dashboard-layout selectedPage="projects">
     <a-flex justify="space-between" style="margin-bottom: 15px">
       <div>
         <a-typography-title :level="4">{{ project.name }}</a-typography-title>
@@ -160,10 +182,10 @@ function reloadTasksWithNewFilters(newFilters) {
     <hr />
 
     <a-flex justify="center" align="center" style="height: 90vh" v-if="loading">
-      <loader />
+      <loading-spinner />
     </a-flex>
     <a-flex gap="middle" align="start" v-else>
-      <div v-for="state in states" :key="state.id">
+      <div v-for="state in states" :key="state.id" style="min-width: 320px">
         <div>
           <a-typography-title :level="5">{{ state.name }}</a-typography-title>
           <VueDraggable
@@ -173,22 +195,37 @@ function reloadTasksWithNewFilters(newFilters) {
             @update="(event) => onUpdate(event, state.id)"
             @add="(event) => onAdd(event, state.id)"
           >
-            <task v-for="task in state.tasks" :key="task.id" :task="task" />
+            <task-card
+              v-for="task in state.tasks"
+              :key="task.id"
+              :task="task"
+            />
           </VueDraggable>
 
+          <a-typography-link
+            v-show="task_add_active_form !== state.id"
+            @click="activate_task_add_form(state.id)"
+            >+ Add Task</a-typography-link
+          >
+          <task-add-form
+            v-show="task_add_active_form === state.id"
+            :state_id="state.id"
+            :project_id="project.id"
+            @newTaskAdded="addNewTask"
+          ></task-add-form>
+
           <div class="add-task-popover">
-            <a-popover :title="`Add task to ${state.name}`" trigger="click" placement="bottomLeft">
+            <!-- <a-popover :title="`Add task to ${state.name}`" trigger="click" placement="bottomLeft">
               <template #content>
-                <p>Content</p>
-                <p>Content</p>
+                <task-add-popover :state_id="state.id" :project_id="project.id" @newTaskAdded="addNewTask"></task-add-popover>
               </template>
               <a-typography-link>+ Add Task</a-typography-link>
-            </a-popover>
+            </a-popover> -->
           </div>
         </div>
       </div>
     </a-flex>
-  </dashboard>
+  </dashboard-layout>
 </template>
 
 <style scoped>
@@ -200,6 +237,6 @@ function reloadTasksWithNewFilters(newFilters) {
 
 .add-task-popover {
   margin: 5px;
-  padding: 5px
+  padding: 5px;
 }
 </style>

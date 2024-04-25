@@ -20,6 +20,8 @@
     "@tiptap/starter-kit": "^2.3.0",
     "@tiptap/vue-3": "^2.3.0",
     "@uppy/vue": "^1.1.2",
+    "@vueuse/components": "^10.9.0",
+    "@vueuse/core": "^10.9.0",
     "ant-design-vue": "4.x",
     "axios": "^1.6.8",
     "chart.js": "^4.4.2",

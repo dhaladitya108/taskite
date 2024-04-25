@@ -4,7 +4,7 @@ from rest_framework import status
 from rest_framework.views import APIView
 
 from taskite.models import User
-from taskite.serializers.home import LoginSerializer
+from taskite.api.home.serializers import LoginSerializer
 
 
 class LoginAPIView(APIView):

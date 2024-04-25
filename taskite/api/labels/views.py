@@ -5,7 +5,8 @@ from rest_framework.views import APIView
 
 from taskite.permissions import ProjectMemberAPIPermission
 from taskite.mixins import ProjectFetchMixin
-from taskite.serializers.label import LabelSerializer
+from taskite.api.labels.serializers import LabelSerializer
+
 
 class LabelListCreateAPIView(ProjectFetchMixin, APIView):
     permission_classes = [IsAuthenticated, ProjectMemberAPIPermission]

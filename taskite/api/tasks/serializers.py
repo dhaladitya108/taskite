@@ -12,11 +12,11 @@ class TaskUpdateSerializer(serializers.Serializer):
 
 
 class TaskSerializer(serializers.ModelSerializer):
-
     class Meta:
         model = Task
         fields = [
             "id",
+            "task_id",
             "name",
             "description",
             "priority",
@@ -24,3 +24,10 @@ class TaskSerializer(serializers.ModelSerializer):
             "sequence",
             "created_at",
         ]
+
+
+class TaskCreateSerializer(serializers.Serializer):
+    state_id = serializers.UUIDField()
+    name = serializers.CharField()
+    priority = serializers.CharField(required=False)
+    order = serializers.FloatField(required=False)

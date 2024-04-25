@@ -7,11 +7,10 @@ from taskite.views.projects import ProjectDetailView
 # fmt: off
 urlpatterns = [
     # Public API Endpoints
-    path("api/v1/", include("taskite.views.api.v1")),
-    path("api/v2/", include("taskite.views.api.v2")),
+    path("api/v1/", include("taskite.api.v1")),
 
     # Internal API Endpoints
-    path("api/", include("taskite.views.api")),
+    path("api/", include("taskite.api")),
 
     # Admin routes
     path("admin/", admin.site.urls),

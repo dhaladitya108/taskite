@@ -7,7 +7,7 @@ from rest_framework.views import APIView
 from taskite.models import Project, ProjectMember
 from taskite.permissions import ProjectMemberAPIPermission
 from taskite.mixins import ProjectFetchMixin
-from taskite.serializers.project import (
+from taskite.api.projects.serializers import (
     ProjectSerializer,
     MemberSerializer,
     ProjectCreateSerializer,

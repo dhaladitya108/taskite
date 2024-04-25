@@ -1,8 +1,8 @@
 <script setup>
 import { ref, onMounted } from 'vue'
 import { projectListAPI } from '@/utils/api'
-import dashboard from '@/components/layouts/dashboard.vue'
-import Project from '@/components/home/index/project.vue'
+import DashboardLayout from '@/components/dashboard-layout.vue'
+import ProjectCard from '@/components/home/index/project-card.vue'
 
 const projects = ref([])
 const projectSearchValue = ref('')
@@ -23,7 +23,7 @@ const searchProject = (searchValue) => {
 </script>
 
 <template>
-  <dashboard selectedPage="home">
+  <dashboard-layout selectedPage="home">
     <div style="margin-bottom: 20px">
       <a-flex justify="space-between">
         <a-input-search
@@ -44,9 +44,9 @@ const searchProject = (searchValue) => {
           class="gutter-row"
           :span="6"
         >
-          <Project :project="project" />
+          <project-card :project="project"></project-card>
         </a-col>
       </a-row>
     </div>
-  </dashboard>
+  </dashboard-layout>
 </template>

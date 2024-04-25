@@ -1,4 +1,3 @@
-import time
 from django.db.models import Prefetch
 from rest_framework.response import Response
 from rest_framework import status
@@ -8,7 +7,7 @@ from rest_framework.permissions import IsAuthenticated
 from taskite.models import State, Task
 from taskite.mixins import ProjectFetchMixin
 from taskite.permissions import ProjectMemberAPIPermission
-from taskite.serializers.state import (
+from taskite.api.states.serializers import (
     StateTaskSerializer,
     StateSerializer,
 )
