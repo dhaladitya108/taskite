@@ -13,7 +13,6 @@ import DashboardLayout from '@/components/dashboard-layout.vue'
 import TaskCard from '@/components/projects/detail/task-card.vue'
 import TaskFilters from '@/components/projects/detail/task-filters.vue'
 import LoadingSpinner from '@/components/common/loading-spinner.vue'
-import TaskAddPopover from '@/components/projects/detail/task-add-popover.vue'
 import TaskAddForm from '@/components/projects/detail/task-add-form.vue'
 
 const props = defineProps(['project'])
@@ -27,10 +26,6 @@ const selectedPriorities = ref([])
 const selectedAssignees = ref([])
 const selectedLabels = ref([])
 const task_add_active_form = ref('')
-
-function close_task_add_form() {
-  task_add_active_form.value = ''
-}
 
 const fetchStates = async (params = {}) => {
   try {
@@ -199,6 +194,7 @@ function activate_task_add_form(state_id) {
               v-for="task in state.tasks"
               :key="task.id"
               :task="task"
+              :project="project"
             />
           </VueDraggable>
 
@@ -213,15 +209,6 @@ function activate_task_add_form(state_id) {
             :project_id="project.id"
             @newTaskAdded="addNewTask"
           ></task-add-form>
-
-          <div class="add-task-popover">
-            <!-- <a-popover :title="`Add task to ${state.name}`" trigger="click" placement="bottomLeft">
-              <template #content>
-                <task-add-popover :state_id="state.id" :project_id="project.id" @newTaskAdded="addNewTask"></task-add-popover>
-              </template>
-              <a-typography-link>+ Add Task</a-typography-link>
-            </a-popover> -->
-          </div>
         </div>
       </div>
     </a-flex>

@@ -10,6 +10,14 @@ class Task(BaseUUIDTimestampModel):
         LOW = ("low", "Low")
         NONE = ("none", "None")
 
+    class TaskType(models.TextChoices):
+        ISSUE = ("issue", "Issue")
+        TASK = ("task", "Task")
+        BUG = ("bug", "Bug")
+        EPIC = ("epic", "Epic")
+        STORY = ("story", "Story")
+
+    parent = models.ForeignKey("self", on_delete=models.CASCADE, blank=True, null=True)
     project = models.ForeignKey(
         "Project", on_delete=models.CASCADE, related_name="project_tasks"
     )
@@ -17,6 +25,9 @@ class Task(BaseUUIDTimestampModel):
         "State", on_delete=models.CASCADE, related_name="state_tasks"
     )
     task_id = models.CharField(max_length=10, blank=True, editable=False)
+    task_type = models.CharField(
+        max_length=10, choices=TaskType.choices, default=TaskType.TASK
+    )
     name = models.TextField(max_length=512)
     description = models.TextField(blank=True, null=True)
     priority = models.CharField(

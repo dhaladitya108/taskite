@@ -31,3 +31,4 @@ class TaskCreateSerializer(serializers.Serializer):
     name = serializers.CharField()
     priority = serializers.CharField(required=False)
     order = serializers.FloatField(required=False)
+    description = serializers.CharField(required=False)

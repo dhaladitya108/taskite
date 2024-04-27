@@ -20,6 +20,7 @@ class Project(BaseUUIDTimestampModel):
         max_length=10, choices=Visibility.choices, default=Visibility.PRIVATE
     )
     created_by = models.ForeignKey("User", on_delete=models.SET_NULL, null=True)
+    thumbnail = models.ImageField(upload_to="projects/thumbnails/", blank=True, null=True)
 
     members = models.ManyToManyField(
         "User",

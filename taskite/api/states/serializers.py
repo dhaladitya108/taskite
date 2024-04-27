@@ -18,6 +18,7 @@ class TaskSerializer(serializers.ModelSerializer):
             "id",
             "task_id",
             "name",
+            "description",
             "priority",
             "order",
             "sequence",

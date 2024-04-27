@@ -1,5 +1,4 @@
 <script setup>
-import axios from 'axios'
 import { reactive } from 'vue'
 import { message } from 'ant-design-vue'
 import { loginAPI } from '@/utils/api'
