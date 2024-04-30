@@ -1,4 +1,7 @@
 from django.db import models, transaction
+from django.dispatch import receiver
+from django.db.models.signals import post_save
+
 from taskite.models.base import BaseUUIDTimestampModel
 
 
@@ -60,15 +63,20 @@ class Task(BaseUUIDTimestampModel):
 
     def save(self, *args, **kwargs):
         if self._state.adding:
-            last_sequence = (
-                Task.objects.filter(project=self.project)
-                .aggregate(largest=models.Max("sequence"))
-                .get("largest")
-            )
-            if last_sequence is not None:
-                self.sequence = last_sequence + 1
-
+            # last_sequence = (
+            #     Task.objects.filter(project=self.project)
+            #     .aggregate(largest=models.Max("sequence"))
+            #     .get("largest")
+            # )
+            # if last_sequence is not None:
+            #     self.sequence = last_sequence + 1
+            self.sequence = self.project.next_task_sequence
             self.task_id = f"{self.project.project_id}-{self.sequence}"
+            
+            # Increment next task sequence no.
+            self.project.next_task_sequence += 1
+            self.project.save(update_fields=["next_task_sequence"])
+            
             if not self.order:
                 last_order = (
                     Task.objects.filter(project=self.project, state=self.state)

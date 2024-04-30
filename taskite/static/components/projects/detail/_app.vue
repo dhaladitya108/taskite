@@ -14,6 +14,7 @@ import TaskCard from '@/components/projects/detail/task-card.vue'
 import TaskFilters from '@/components/projects/detail/task-filters.vue'
 import LoadingSpinner from '@/components/common/loading-spinner.vue'
 import TaskAddForm from '@/components/projects/detail/task-add-form.vue'
+import TaskDetailModal from '@/components/projects/detail/task-detail-modal.vue'
 
 const props = defineProps(['project'])
 
@@ -25,12 +26,15 @@ const labels = ref([])
 const selectedPriorities = ref([])
 const selectedAssignees = ref([])
 const selectedLabels = ref([])
-const task_add_active_form = ref('')
+const taskAddActiveForm = ref('')
+const selectedTaskId = ref('')
+const showTaskDetailModal = ref(false)
 
 const fetchStates = async (params = {}) => {
   try {
     loading.value = true
     const { data } = await stateTaskListAPI(project.value.id, params)
+    
     states.value = data
   } catch (error) {
     console.log(error)
@@ -68,64 +72,63 @@ watch([selectedPriorities, selectedAssignees, selectedLabels], async () => {
 })
 
 async function onUpdate(event, state_id) {
-  const selected_state = states.value.find((s) => s.id === state_id)
-  const current_task = selected_state.tasks[event.newIndex]
-  const updated_data = {}
+  const selectedState = states.value.find((s) => s.id === state_id)
+  const currentTask = selectedState.tasks[event.newIndex]
+  const updatedData = {}
 
   if (event.newIndex === 0) {
-    let next_task = selected_state.tasks[event.newIndex + 1]
-    updated_data['order'] = next_task.order / 2
-  } else if (event.newIndex === selected_state.tasks.length - 1) {
-    let previous_task = selected_state.tasks[event.newIndex - 1]
-    updated_data['order'] = previous_task.order / 2
+    let next_task = selectedState.tasks[event.newIndex + 1]
+    updatedData['order'] = next_task.order / 2
+  } else if (event.newIndex === selectedState.tasks.length - 1) {
+    let previous_task = selectedState.tasks[event.newIndex - 1]
+    updatedData['order'] = previous_task.order / 2
   } else {
-    let next_task = selected_state.tasks[event.newIndex + 1]
-    let previous_task = selected_state.tasks[event.newIndex - 1]
-    updated_data['order'] = (next_task.order + previous_task.order) / 2
+    let next_task = selectedState.tasks[event.newIndex + 1]
+    let previous_task = selectedState.tasks[event.newIndex - 1]
+    updatedData['order'] = (next_task.order + previous_task.order) / 2
   }
 
   try {
     const { data } = await taskUpdateAPI(
       project.value.id,
-      current_task.id,
-      updated_data
+      currentTask.id,
+      updatedData
     )
-    current_task.order = data.task.order
+    currentTask.order = data.task.order
   } catch (error) {
     console.log(error)
   }
 }
 async function onAdd(event, state_id) {
-  const selected_state = states.value.find((s) => s.id === state_id)
-  const current_task = selected_state.tasks[event.newIndex]
-  const updated_data = { state_id: selected_state.id }
+  const selectedState = states.value.find((s) => s.id === state_id)
+  const currentTask = selectedState.tasks[event.newIndex]
+  const updatedData = { state_id: selectedState.id }
 
   if (event.newIndex === 0) {
-    let next_task = selected_state.tasks[event.newIndex + 1]
-    updated_data['order'] = next_task.order / 2
-  } else if (event.newIndex === selected_state.tasks.length - 1) {
-    let previous_task = selected_state.tasks[event.newIndex - 1]
-    updated_data['order'] = previous_task.order + 10000
+    let next_task = selectedState.tasks[event.newIndex + 1]
+    updatedData['order'] = next_task.order / 2
+  } else if (event.newIndex === selectedState.tasks.length - 1) {
+    let previous_task = selectedState.tasks[event.newIndex - 1]
+    updatedData['order'] = previous_task.order + 10000
   } else {
-    let next_task = selected_state.tasks[event.newIndex + 1]
-    let previous_task = selected_state.tasks[event.newIndex - 1]
-    updated_data['order'] = (next_task.order + previous_task.order) / 2
+    let next_task = selectedState.tasks[event.newIndex + 1]
+    let previous_task = selectedState.tasks[event.newIndex - 1]
+    updatedData['order'] = (next_task.order + previous_task.order) / 2
   }
 
   try {
     const { data } = await taskUpdateAPI(
       project.value.id,
-      current_task.id,
-      updated_data
+      currentTask.id,
+      updatedData
     )
-    current_task.order = data.task.order
+    currentTask.order = data.task.order
   } catch (error) {
     console.log(error)
   }
 }
 
 function reloadTasksWithNewFilters(newFilters) {
-  console.log(newFilters)
 
   const params = {}
   if (newFilters.selectedPriorities.length > 0) {
@@ -143,18 +146,23 @@ function reloadTasksWithNewFilters(newFilters) {
   fetchStates(params)
 }
 
-function addNewTask(state_id, new_task) {
-  const selected_state = states.value.find((s) => s.id === state_id)
-  selected_state.tasks.push({
-    ...new_task,
+function addNewTask(state_id, newTask) {
+  const selectedState = states.value.find((s) => s.id === state_id)
+  selectedState.tasks.push({
+    ...newTask,
     assignees: [],
   })
 
-  task_add_active_form.value = ''
+  taskAddActiveForm.value = ''
 }
 
-function activate_task_add_form(state_id) {
-  task_add_active_form.value = state_id
+function activateTaskAddForm(stateId) {
+  taskAddActiveForm.value = stateId
+}
+
+function showTaskDetail(taskId) {
+  selectedTaskId.value = taskId
+  showTaskDetailModal.value = true
 }
 </script>
 
@@ -195,23 +203,31 @@ function activate_task_add_form(state_id) {
               :key="task.id"
               :task="task"
               :project="project"
+              @selected="showTaskDetail"
             />
           </VueDraggable>
 
           <a-typography-link
-            v-show="task_add_active_form !== state.id"
-            @click="activate_task_add_form(state.id)"
+            v-show="taskAddActiveForm !== state.id"
+            @click="activateTaskAddForm(state.id)"
             >+ Add Task</a-typography-link
           >
           <task-add-form
-            v-show="task_add_active_form === state.id"
-            :state_id="state.id"
-            :project_id="project.id"
+            v-show="taskAddActiveForm === state.id"
+            :stateId="state.id"
+            :projectId="project.id"
             @newTaskAdded="addNewTask"
           ></task-add-form>
         </div>
       </div>
     </a-flex>
+
+    <a-modal v-model:open="showTaskDetailModal" width="700px" :footer="null" :destroyOnClose="true">
+      <task-detail-modal
+        :taskId="selectedTaskId"
+        :projectId="project.id"
+      ></task-detail-modal>
+    </a-modal>
   </dashboard-layout>
 </template>
 

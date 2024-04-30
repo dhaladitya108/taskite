@@ -27,7 +27,7 @@ export default defineConfig({
   build: {
     manifest: 'manifest.json',
     rollupOptions: {
-      input: glob.sync(path.resolve(__dirname, 'taskite/static/js/**/*.js')),
+      input: glob.sync(path.resolve(__dirname, 'taskite/static/entrypoints/**/*.js')),
     },
   },
   resolve: {

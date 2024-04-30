@@ -62,10 +62,10 @@ function toggleDropdown(event) {
                   :value="member.id"
                   ><a-avatar
                     size="small"
-                    :src="generateAvatar(member.full_name)"
+                    :src="generateAvatar(member.fullName)"
                     style="margin-right: 7px;"
                   ></a-avatar
-                  >{{ member.display_name }}</a-checkbox
+                  >{{ member.displayName }}</a-checkbox
                 >
               </a-flex>
             </a-checkbox-group>

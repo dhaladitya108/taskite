@@ -1,4 +1,4 @@
-from django.db import transaction
+import time
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.views import APIView
@@ -16,6 +16,7 @@ from taskite.api.tasks.serializers import (
     TaskUpdateSerializer,
     TaskSerializer,
     TaskCreateSerializer,
+    TaskDetailSerializer
 )
 
 
@@ -55,6 +56,18 @@ class TaskListCreateAPIView(ProjectFetchMixin, APIView):
 
 class TaskDetailUpdateDestroyAPIView(ProjectFetchMixin, APIView):
     permission_classes = [IsAuthenticated, ProjectMemberAPIPermission]
+
+    def get(self, request, *args, **kwargs):
+        time.sleep(1)
+
+        task = Task.objects.filter(
+            project=request.project, id=kwargs.get("task_id")
+        ).prefetch_related("assignees").prefetch_related("labels").first()
+        if not task:
+            raise TaskNotFoundAPIException
+        serializer = TaskDetailSerializer(task)
+        return Response(serializer.data, status=status.HTTP_200_OK)        
+
 
     def patch(self, request, *args, **kwargs):
         task = Task.objects.filter(

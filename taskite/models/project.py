@@ -21,6 +21,7 @@ class Project(BaseUUIDTimestampModel):
     )
     created_by = models.ForeignKey("User", on_delete=models.SET_NULL, null=True)
     thumbnail = models.ImageField(upload_to="projects/thumbnails/", blank=True, null=True)
+    next_task_sequence = models.IntegerField(default=1)
 
     members = models.ManyToManyField(
         "User",

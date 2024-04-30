@@ -2,8 +2,8 @@
 import { reactive } from 'vue'
 import { message } from 'ant-design-vue'
 
-import { task_add_api } from '@/utils/api'
-const props = defineProps(['project_id', 'state_id'])
+import { taskAddAPI } from '@/utils/api'
+const props = defineProps(['projectId', 'stateId'])
 const emit = defineEmits(['newTaskAdded'])
 
 const task_form = reactive({
@@ -11,13 +11,13 @@ const task_form = reactive({
 })
 
 const onFinish = async (values) => {
-  values['state_id'] = props.state_id
+  values['stateId'] = props.stateId
 
   try {
-    const { data } = await task_add_api(props.project_id, values)
+    const { data } = await taskAddAPI(props.projectId, values)
     message.success(data.detail)
 
-    emit('newTaskAdded', props.state_id, data.task)
+    emit('newTaskAdded', props.stateId, data.task)
   } catch (error) {
     console.log(error)
   }

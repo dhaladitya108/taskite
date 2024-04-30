@@ -1,7 +1,7 @@
 <script setup>
 import { reactive, ref, computed, onMounted } from 'vue'
 import BaseEditor from '@/components/common/base-editor.vue'
-import { taskUpdateAPI } from '@/utils/api'
+import { taskUpdateAPI, task_detail_api } from '@/utils/api'
 
 const props = defineProps(['task', 'project'])
 const bordered = ref(false)
@@ -46,8 +46,17 @@ const set_default_description = () => {
   task_form.description = props.task.description
 }
 
+const fetch_task_details = async () => {
+  try {
+    await task_detail_api(props.project.id, props.task.id)
+  } catch (error) {
+    console.log('Error')
+  }
+}
+
 onMounted(() => {
   console.log('Mounted ---> ', props.task.task_id)
+  fetch_task_details()
 })
 </script>
 

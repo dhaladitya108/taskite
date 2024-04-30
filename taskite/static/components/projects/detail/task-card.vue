@@ -1,10 +1,9 @@
 <script setup>
-import TaskDetailCard from '@/components/projects/detail/task-detail-card.vue';
-
 import { ref, computed } from 'vue'
 import { generateAvatar } from '@/utils/generators'
 
 const { task, project } = defineProps(['task', 'project'])
+const emit = defineEmits(['selected'])
 
 const priorityTagColor = computed(() => {
   switch (task.priority) {
@@ -25,9 +24,8 @@ const priorityTagColor = computed(() => {
   }
 })
 
-const show_task_modal = ref(false)
 function open_task_modal() {
-  show_task_modal.value = true
+  emit('selected', task.id)
 }
 </script>
 
@@ -36,7 +34,7 @@ function open_task_modal() {
     <a-flex justify="space-between">
       <div>
         <a-typography-text type="secondary" style="font-size: smaller">{{
-          task.task_id
+          task.taskId
         }}</a-typography-text>
       </div>
       <a-tag :color="priorityTagColor" :bordered="false">
@@ -49,20 +47,16 @@ function open_task_modal() {
     <a-flex justify="end">
       <a-avatar-group>
         <a-tooltip
-          :title="assignee.display_name"
+          :title="assignee.displayName"
           placement="top"
           v-for="assignee in task.assignees"
           :key="assignee.id"
         >
-          <a-avatar size="small" :src="generateAvatar(assignee.full_name)"> </a-avatar>
+          <a-avatar size="small" :src="generateAvatar(assignee.fullName)"> </a-avatar>
         </a-tooltip>
       </a-avatar-group>
     </a-flex>
   </a-card>
-
-  <a-modal v-model:open="show_task_modal" width="700px" :footer="null">
-    <task-detail-card :task="task" :project="project"></task-detail-card>
-  </a-modal>
 </template>
 
 <style scoped>
