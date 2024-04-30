@@ -2,8 +2,10 @@
 import { ref, computed } from 'vue'
 import { generateAvatar } from '@/utils/generators'
 
+import TaskDetailModal from '@/components/projects/detail/task-detail-modal.vue'
+
 const { task, project } = defineProps(['task', 'project'])
-const emit = defineEmits(['selected'])
+const emit = defineEmits(['updated'])
 
 const priorityTagColor = computed(() => {
   switch (task.priority) {
@@ -24,13 +26,22 @@ const priorityTagColor = computed(() => {
   }
 })
 
-function open_task_modal() {
-  emit('selected', task.id)
+const showTaskDetailModal = ref(false)
+function openTaskDetailModal() {
+  showTaskDetailModal.value = true
+}
+
+const handleTaskUpdateFromModal = (payload) => {
+  emit('updated', payload)
+  
+  Object.keys(payload).forEach((key) => {
+    task[key] = payload[key]
+  })
 }
 </script>
 
 <template>
-  <a-card id="task-card" size="small" @click="open_task_modal">
+  <a-card id="task-card" size="small" @click="openTaskDetailModal">
     <a-flex justify="space-between">
       <div>
         <a-typography-text type="secondary" style="font-size: smaller">{{
@@ -52,11 +63,25 @@ function open_task_modal() {
           v-for="assignee in task.assignees"
           :key="assignee.id"
         >
-          <a-avatar size="small" :src="generateAvatar(assignee.fullName)"> </a-avatar>
+          <a-avatar size="small" :src="generateAvatar(assignee.fullName)">
+          </a-avatar>
         </a-tooltip>
       </a-avatar-group>
     </a-flex>
   </a-card>
+
+  <a-modal
+    v-model:open="showTaskDetailModal"
+    width="800px"
+    :footer="null"
+    :destroyOnClose="true"
+  >
+    <task-detail-modal
+      :taskId="task.id"
+      :projectId="project.id"
+      @updated="handleTaskUpdateFromModal"
+    ></task-detail-modal>
+  </a-modal>
 </template>
 
 <style scoped>

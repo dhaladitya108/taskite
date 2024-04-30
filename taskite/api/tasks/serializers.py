@@ -9,6 +9,7 @@ class TaskUpdateSerializer(serializers.Serializer):
     description = serializers.CharField(required=False)
     priority = serializers.ChoiceField(choices=Task.Priority.choices, required=False)
     order = serializers.FloatField(required=False)
+    task_type = serializers.ChoiceField(choices=Task.TaskType.choices, required=False)
 
 
 class TaskSerializer(serializers.ModelSerializer):
@@ -18,6 +19,7 @@ class TaskSerializer(serializers.ModelSerializer):
             "id",
             "task_id",
             "name",
+            "task_type",
             "description",
             "priority",
             "order",
@@ -32,6 +34,7 @@ class TaskCreateSerializer(serializers.Serializer):
     priority = serializers.CharField(required=False)
     order = serializers.FloatField(required=False)
     description = serializers.CharField(required=False)
+    task_type = serializers.CharField(required=False)
 
 
 class TaskAssigneeSerializer(serializers.ModelSerializer):

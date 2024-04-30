@@ -27,8 +27,6 @@ const selectedPriorities = ref([])
 const selectedAssignees = ref([])
 const selectedLabels = ref([])
 const taskAddActiveForm = ref('')
-const selectedTaskId = ref('')
-const showTaskDetailModal = ref(false)
 
 const fetchStates = async (params = {}) => {
   try {
@@ -160,10 +158,6 @@ function activateTaskAddForm(stateId) {
   taskAddActiveForm.value = stateId
 }
 
-function showTaskDetail(taskId) {
-  selectedTaskId.value = taskId
-  showTaskDetailModal.value = true
-}
 </script>
 
 <template>
@@ -221,13 +215,6 @@ function showTaskDetail(taskId) {
         </div>
       </div>
     </a-flex>
-
-    <a-modal v-model:open="showTaskDetailModal" width="700px" :footer="null" :destroyOnClose="true">
-      <task-detail-modal
-        :taskId="selectedTaskId"
-        :projectId="project.id"
-      ></task-detail-modal>
-    </a-modal>
   </dashboard-layout>
 </template>
 
