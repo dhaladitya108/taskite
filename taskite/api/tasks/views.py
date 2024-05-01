@@ -4,7 +4,7 @@ from rest_framework import status
 from rest_framework.views import APIView
 from rest_framework.permissions import IsAuthenticated
 
-from taskite.models import Task, State
+from taskite.models import Task, State, User
 from taskite.permissions import ProjectMemberAPIPermission
 from taskite.mixins import ProjectFetchMixin
 from taskite.exceptions import (
@@ -58,7 +58,7 @@ class TaskDetailUpdateDestroyAPIView(ProjectFetchMixin, APIView):
     permission_classes = [IsAuthenticated, ProjectMemberAPIPermission]
 
     def get(self, request, *args, **kwargs):
-        time.sleep(1)
+        # time.sleep(1)
 
         task = Task.objects.filter(
             project=request.project, id=kwargs.get("task_id")
@@ -86,6 +86,11 @@ class TaskDetailUpdateDestroyAPIView(ProjectFetchMixin, APIView):
         if state_id:
             if not State.objects.filter(project=request.project, id=state_id).exists():
                 raise StateNotFoundAPIException
+            
+        assignee_ids = data.pop("assignee_ids", None)
+        if assignee_ids:
+            assignees = User.objects.filter(user_project__project=task.project, id__in=assignee_ids)
+            task.assignees.set(assignees)
 
         for attr, value in data.items():
             setattr(task, attr, value)

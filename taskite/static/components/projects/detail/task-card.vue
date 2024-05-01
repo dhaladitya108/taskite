@@ -4,7 +4,7 @@ import { generateAvatar } from '@/utils/generators'
 
 import TaskDetailModal from '@/components/projects/detail/task-detail-modal.vue'
 
-const { task, project } = defineProps(['task', 'project'])
+const { task, project, members } = defineProps(['task', 'project', 'members'])
 const emit = defineEmits(['updated'])
 
 const priorityTagColor = computed(() => {
@@ -79,6 +79,9 @@ const handleTaskUpdateFromModal = (payload) => {
     <task-detail-modal
       :taskId="task.id"
       :projectId="project.id"
+      :projectSlug="project.slug"
+      :projectName="project.name"
+      :members="members"
       @updated="handleTaskUpdateFromModal"
     ></task-detail-modal>
   </a-modal>

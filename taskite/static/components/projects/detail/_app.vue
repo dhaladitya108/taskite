@@ -14,7 +14,6 @@ import TaskCard from '@/components/projects/detail/task-card.vue'
 import TaskFilters from '@/components/projects/detail/task-filters.vue'
 import LoadingSpinner from '@/components/common/loading-spinner.vue'
 import TaskAddForm from '@/components/projects/detail/task-add-form.vue'
-import TaskDetailModal from '@/components/projects/detail/task-detail-modal.vue'
 
 const props = defineProps(['project'])
 
@@ -161,7 +160,7 @@ function activateTaskAddForm(stateId) {
 </script>
 
 <template>
-  <dashboard-layout selectedPage="projects">
+  <dashboard-layout page="projects">
     <a-flex justify="space-between" style="margin-bottom: 15px">
       <div>
         <a-typography-title :level="4">{{ project.name }}</a-typography-title>
@@ -197,7 +196,7 @@ function activateTaskAddForm(stateId) {
               :key="task.id"
               :task="task"
               :project="project"
-              @selected="showTaskDetail"
+              :members="members"
             />
           </VueDraggable>
 

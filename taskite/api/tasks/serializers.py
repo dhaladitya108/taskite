@@ -10,6 +10,7 @@ class TaskUpdateSerializer(serializers.Serializer):
     priority = serializers.ChoiceField(choices=Task.Priority.choices, required=False)
     order = serializers.FloatField(required=False)
     task_type = serializers.ChoiceField(choices=Task.TaskType.choices, required=False)
+    assignee_ids = serializers.ListSerializer(required=False, child=serializers.UUIDField())
 
 
 class TaskSerializer(serializers.ModelSerializer):

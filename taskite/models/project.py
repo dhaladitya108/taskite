@@ -39,7 +39,7 @@ class Project(BaseUUIDTimestampModel):
     def save(self, *args, **kwargs):
         if self._state.adding:
             if not self.slug:
-                self.slug = slugify(self.name.lower)
+                self.slug = slugify(self.name.lower())
             if not self.project_id:
                 self.project_id = self.generate_project_id()
         super().save(*args, **kwargs)

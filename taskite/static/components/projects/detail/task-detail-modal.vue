@@ -1,12 +1,18 @@
 <script setup>
-import { ref } from 'vue'
-import { onMounted } from 'vue'
+import { ref, onMounted, computed } from 'vue'
 import { taskDetailAPI, taskUpdateAPI } from '@/utils/api'
+import { generateAvatar } from '@/utils/generators'
 
 import LoadingSpinner from '@/components/common/loading-spinner.vue'
 import BaseEditor from '@/components/common/base-editor.vue'
 
-const props = defineProps(['taskId', 'projectId'])
+const props = defineProps([
+  'taskId',
+  'projectId',
+  'projectSlug',
+  'projectName',
+  'members',
+])
 const emit = defineEmits(['updated'])
 
 const bordered = ref(false)
@@ -18,6 +24,7 @@ const fetchTaskDetail = async () => {
     task.value = data
     name.value = data.name
     description.value = data.description
+    assigneeIds.value = data.assignees.map((assignee) => assignee.id)
   } catch (error) {
     console.log(error)
   }
@@ -63,14 +70,22 @@ const handleTaskTypeChange = (value) => {
   updateTask({ taskType: value })
   emit('updated', { taskType: value })
 }
+
+const assigneeIds = ref([])
+const handleAssigneeChange = (values) => {
+  updateTask({ assigneeIds: values })
+  emit('updated', { assignees: props.members.filter((member) => values.includes(member.id)) })
+}
 </script>
 
 <template>
   <div v-if="!!task">
     <a-breadcrumb>
-      <a-breadcrumb-item>Project</a-breadcrumb-item>
       <a-breadcrumb-item>
-        <a :href="`${task.taskId}`">{{ task.taskId }}</a>
+        <a :href="`/${props.projectSlug}/`">{{ props.projectName }}</a>
+      </a-breadcrumb-item>
+      <a-breadcrumb-item>
+        <a :href="`/${props.projectSlug}/${task.taskId}/`">{{ task.taskId }}</a>
       </a-breadcrumb-item>
     </a-breadcrumb>
 
@@ -126,6 +141,30 @@ const handleTaskTypeChange = (value) => {
                 <a-select-option value="story">Story</a-select-option>
                 <a-select-option value="bug">Bug</a-select-option>
                 <a-select-option value="epic">Epic</a-select-option>
+              </a-select>
+            </a-form-item>
+
+            <a-form-item label="Assignee">
+              <a-select
+                v-model:value="assigneeIds"
+                mode="multiple"
+                option-label-prop="children"
+                @change="handleAssigneeChange"
+              >
+                <a-select-option
+                  :value="member.id"
+                  :label="member.displayName"
+                  v-for="member in props.members"
+                >
+                  <span role="img"
+                    ><a-avatar
+                      size="small"
+                      :src="generateAvatar(member.fullName)"
+                    >
+                    </a-avatar>
+                    {{ member.displayName }}
+                  </span>
+                </a-select-option>
               </a-select>
             </a-form-item>
           </a-form>

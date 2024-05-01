@@ -20,6 +20,7 @@ export const http = applyCaseMiddleware(
 
 export const loginAPI = (data) => http.post('/home/login/', data)
 
+export const projectCreateAPI = (data) => http.post('/projects/', data)
 export const projectListAPI = () => http.get('/projects/')
 export const projectMemberListAPI = (projectId) =>
   http.get(`/projects/${projectId}/members/`)

@@ -3,6 +3,7 @@ import { ref, onMounted } from 'vue'
 import { projectListAPI } from '@/utils/api'
 import DashboardLayout from '@/components/dashboard-layout.vue'
 import ProjectCard from '@/components/home/index/project-card.vue'
+import ProjectAddModal from '@/components/home/index/project-add-modal.vue'
 
 const projects = ref([])
 const projectSearchValue = ref('')
@@ -20,10 +21,12 @@ const searchProject = (searchValue) => {
   console.log('use value', searchValue)
   console.log('or use this.value', searchValue.value)
 }
+
+const showAddProjectModal = ref(false)
 </script>
 
 <template>
-  <dashboard-layout selectedPage="home">
+  <dashboard-layout page="home">
     <div style="margin-bottom: 20px">
       <a-flex justify="space-between">
         <a-input-search
@@ -32,7 +35,7 @@ const searchProject = (searchValue) => {
           style="width: 300px"
           @search="searchProject"
         />
-        <a-button type="primary">Add project +</a-button>
+        <a-button type="primary" @click="() => showAddProjectModal = true">Add project +</a-button>
       </a-flex>
     </div>
 
@@ -48,5 +51,9 @@ const searchProject = (searchValue) => {
         </a-col>
       </a-row>
     </div>
+
+    <a-modal :footer="false" title="Add project" v-model:open="showAddProjectModal">
+      <project-add-modal></project-add-modal>
+    </a-modal>
   </dashboard-layout>
 </template>

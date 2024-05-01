@@ -17,6 +17,5 @@ class MemberSerializer(serializers.ModelSerializer):
 
 class ProjectCreateSerializer(serializers.Serializer):
     name = serializers.CharField()
-    identifier = serializers.SlugField(required=False)
-    visibility = serializers.CharField()
-    description = serializers.CharField(required=False)
+    visibility = serializers.ChoiceField(choices=Project.Visibility.choices)
+    description = serializers.CharField(required=False, allow_blank=True)

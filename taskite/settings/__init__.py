@@ -14,6 +14,7 @@ from pathlib import Path
 import os
 from dotenv import load_dotenv
 
+from taskite.utils import get_list_from_string
 from taskite.settings.installed_apps import *
 from taskite.settings.middleware import *
 from taskite.settings.templates import *
@@ -22,28 +23,25 @@ from taskite.settings.auth_password_validators import *
 from taskite.settings.i18n import *
 from taskite.settings.logging import *
 
+# Load environment variables from .env file.
+load_dotenv()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent.parent
-
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = "django-insecure-j%ay95_dbm*8e%#utvp*ktlo#^^gqh7+9_1b6$y85ha1&o=0^="
+SECRET_KEY = os.environ.get("SECRET_KEY", "django-insecure-j%ay95_dbm*8e%#utvp*ktlo#^^gqh7+9_1b6$y85ha1&o=0^=")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = bool(os.environ.get("DEBUG", 1))
 
-ALLOWED_HOSTS = []
-
-if DEBUG:
-    load_dotenv()
+ALLOWED_HOSTS = get_list_from_string(os.environ.get("ALLOWED_HOST", ""))
 
 ROOT_URLCONF = "taskite.urls"
 WSGI_APPLICATION = "taskite.wsgi.application"
-
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.0/howto/static-files/

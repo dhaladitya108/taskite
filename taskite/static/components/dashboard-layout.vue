@@ -3,8 +3,10 @@
     <a-layout-sider v-model:collapsed="collapsed" collapsible>
       <a-menu v-model:selectedKeys="selectedKeys" theme="dark" mode="inline">
         <a-menu-item key="home">
-          <HomeOutlined />
-          <span>Home</span>
+          <a href='/'>
+            <HomeOutlined />
+            <span>Home</span>
+          </a>
         </a-menu-item>
         <a-menu-item key="projects">
           <ProjectOutlined />
@@ -22,8 +24,10 @@
           <a-menu-item key="settings-preferences">Preferences</a-menu-item>
         </a-sub-menu>
         <a-menu-item key="logout">
-          <user-outlined />
-          <span>Logout</span>
+          <a href="/logout">
+            <user-outlined />
+            <span>Logout</span>
+          </a>
         </a-menu-item>
       </a-menu>
     </a-layout-sider>
@@ -37,7 +41,7 @@
     </a-layout>
   </a-layout>
 </template>
-<script lang="ts" setup>
+<script setup>
 import {
   PieChartOutlined,
   DesktopOutlined,
@@ -50,8 +54,10 @@ import {
 } from '@ant-design/icons-vue'
 import { ref } from 'vue'
 
-const collapsed = ref<boolean>(true)
-const selectedKeys = ref<string[]>(['1'])
+const props = defineProps(['page'])
+
+const collapsed = ref(true)
+const selectedKeys = ref([props.page])
 </script>
 <style scoped>
 .logo {

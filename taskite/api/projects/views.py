@@ -33,6 +33,8 @@ class ProjectListCreateAPIView(APIView):
     def post(self, request):
         serializer = ProjectCreateSerializer(data=request.data)
         if not serializer.is_valid():
+            print(serializer.errors)
+
             return Response(
                 data={"detail": "Invalid projected information provided."},
                 status=status.HTTP_400_BAD_REQUEST,
