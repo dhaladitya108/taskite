@@ -14,3 +14,4 @@ idna==3.7
 aioquic==1.0.0
 Faker==25.0.0
 gunicorn==22.0.0
+whitenoise==6.6.0
