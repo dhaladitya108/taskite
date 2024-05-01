@@ -10,8 +10,9 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.0/ref/settings/
 """
 
-from pathlib import Path
 import os
+import re
+from pathlib import Path
 from dotenv import load_dotenv
 
 from taskite.utils import get_list_from_string
@@ -60,9 +61,16 @@ AUTH_USER_MODEL = "taskite.User"
 LOGIN_URL = "/login"
 
 DJANGO_VITE_DEV_MODE = DEBUG
+DJANGO_VITE_MANIFEST_PATH = BASE_DIR / "taskite/static/dist/manifest.json"
+
 CORS_ALLOW_ALL_ORIGINS = True
 
 ORGANIZATION_SETTINGS = {
     "organization_name": "Acorn Globus",
     "primary_color": "#1677ff",
 }
+
+def immutable_file_test(path, url):
+    # Match vite (rollup)-generated hashes, à la, `some_file-CSliV9zW.js`
+    return re.match(r"^.+[.-][0-9a-zA-Z_-]{8,12}\..+$", url)
+WHITENOISE_IMMUTABLE_FILE_TEST = immutable_file_test
