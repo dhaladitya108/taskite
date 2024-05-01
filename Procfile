@@ -1,2 +1,2 @@
 release: python3 manage.py migrate
-web: gunicorn taskite:wsgi
+web: gunicorn taskite.wsgi
