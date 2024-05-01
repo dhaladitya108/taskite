@@ -7,8 +7,9 @@ export default defineConfig({
   themeConfig: {
     // https://vitepress.dev/reference/default-theme-config
     nav: [
-      { text: 'Home', link: '/introduction/home' },
-      // { text: 'Examples', link: '/markdown-examples' }
+      { text: 'Home', link: '/' },
+      { text: 'Guide', link: '/introduction/home' },
+      { text: 'Demo', link: 'https://demo.taskite.santoshkpatro.com' }
     ],
 
     sidebar: [
@@ -38,7 +39,7 @@ export default defineConfig({
     ],
 
     socialLinks: [
-      { icon: 'github', link: 'https://github.com/vuejs/vitepress' }
+      { icon: 'github', link: 'https://github.com/santoshkpatro/taskite' }
     ]
   }
 })

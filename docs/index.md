@@ -4,15 +4,15 @@ layout: home
 
 hero:
   name: "Taskite"
-  text: "Open source Task Management Tool."
+  text: "Open Source Task Management Tool."
   tagline: My great project tagline
   actions:
     - theme: brand
       text: Guide
       link: /introduction/home
     - theme: alt
-      text: API Examples
-      link: /api-examples
+      text: Demo
+      link: "https://demo.taskite.santoshkpatro.com"
 
 features:
   - title: Feature A
