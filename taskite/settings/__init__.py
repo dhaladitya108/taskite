@@ -37,7 +37,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent.parent
 SECRET_KEY = os.environ.get("SECRET_KEY", "django-insecure-j%ay95_dbm*8e%#utvp*ktlo#^^gqh7+9_1b6$y85ha1&o=0^=")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = bool(os.environ.get("DEBUG", 1))
+DEBUG = bool(int(os.environ.get("DEBUG", "1")))
 
 ALLOWED_HOSTS = get_list_from_string(os.environ.get("ALLOWED_HOST", ""))
 
@@ -61,7 +61,8 @@ AUTH_USER_MODEL = "taskite.User"
 LOGIN_URL = "/login"
 
 DJANGO_VITE_DEV_MODE = DEBUG
-DJANGO_VITE_MANIFEST_PATH = BASE_DIR / "taskite/static/dist/manifest.json"
+DJANGO_VITE_MANIFEST_PATH = BASE_DIR / "static/dist/manifest.json"
+DJANGO_VITE_STATIC_URL_PREFIX = "dist"
 
 CORS_ALLOW_ALL_ORIGINS = True
 
