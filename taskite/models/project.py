@@ -20,7 +20,9 @@ class Project(BaseUUIDTimestampModel):
         max_length=10, choices=Visibility.choices, default=Visibility.PRIVATE
     )
     created_by = models.ForeignKey("User", on_delete=models.SET_NULL, null=True)
-    thumbnail = models.ImageField(upload_to="projects/thumbnails/", blank=True, null=True)
+    thumbnail = models.ImageField(
+        upload_to="projects/thumbnails/", blank=True, null=True
+    )
     next_task_sequence = models.IntegerField(default=1)
 
     members = models.ManyToManyField(
@@ -104,3 +106,26 @@ class ProjectMember(BaseUUIDTimestampModel):
             project_member = ProjectMember(user=instance.created_by, project=instance)
             project_member.role = ProjectMember.Role.ADMIN
             project_member.save()
+
+
+class ProjectMemberInvite(BaseUUIDTimestampModel):
+    project = models.ForeignKey(
+        "Project", on_delete=models.CASCADE, related_name="member_invites"
+    )
+    email = models.EmailField()
+    message = models.TextField(blank=True, null=True)
+    accepted_at = models.DateTimeField(blank=True, null=True)
+    role = models.CharField(
+        max_length=10,
+        choices=ProjectMember.Role.choices,
+        default=ProjectMember.Role.MEMBER,
+    )
+
+    class Meta:
+        db_table = "project_member_invites"
+        verbose_name = "Project Member Invite"
+        verbose_name_plural = "Project Member Invites"
+        ordering = ("-created_at",)
+
+    def __str__(self):
+        return str(self.id)

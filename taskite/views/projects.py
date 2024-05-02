@@ -31,15 +31,30 @@ class ProjectTaskView(LoginRequiredMixin, View):
         project = Project.objects.filter(slug=slug).first()
         if not project:
             raise Http404()
-        
+
         task = Task.objects.filter(project=project, task_id=task_id).first()
         if not task:
             raise Http404()
-        
+
         context = {
-            "props": {
-                "project": ProjectSerializer(project).data,
-                "task_id": task.id
-            }
+            "props": {"project": ProjectSerializer(project).data, "task_id": task.id}
         }
         return render(request, "projects/task.html", context)
+
+
+class ProjectSettingsGeneralView(LoginRequiredMixin, View):
+    def get(self, request, slug):
+        project = Project.objects.filter(slug=slug).first()
+        if not project:
+            raise Http404()
+        context = {"props": {"projectSlug": project.slug}}
+        return render(request, "projects/settings/general.html", context)
+
+
+class ProjectSettingsMembersView(LoginRequiredMixin, View):
+    def get(self, request, slug):
+        project = Project.objects.filter(slug=slug).first()
+        if not project:
+            raise Http404()
+        context = {"props": {"projectSlug": project.slug}}
+        return render(request, "projects/settings/members.html", context)
