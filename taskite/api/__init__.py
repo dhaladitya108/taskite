@@ -11,10 +11,12 @@ from taskite.api.tasks.views import (
     TaskDetailUpdateDestroyAPIView,
 )
 from taskite.api.labels.views import LabelListCreateAPIView
+from taskite.api.users.views import UserListAPIView
 
 # fmt: off
 urlpatterns = [
     path("home/login/", LoginAPIView.as_view()),
+    path("users/", UserListAPIView.as_view()),
     path("projects/", ProjectListCreateAPIView.as_view()),
     path("projects/<uuid:project_id>/members/", ProjectMemberListAPIView.as_view()),
     path("projects/<uuid:project_id>/states/", StateListCreateAPIView.as_view()),

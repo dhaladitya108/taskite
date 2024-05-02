@@ -3,7 +3,7 @@
     <a-layout-sider v-model:collapsed="collapsed" collapsible>
       <a-menu v-model:selectedKeys="selectedKeys" theme="dark" mode="inline">
         <a-menu-item key="home">
-          <a href='/'>
+          <a href="/">
             <HomeOutlined />
             <span>Home</span>
           </a>
@@ -19,7 +19,9 @@
               <span>Settings</span>
             </span>
           </template>
-          <a-menu-item key="settings-members">Members</a-menu-item>
+          <a-menu-item key="settings-members"
+            ><a href="/settings/members">Members</a></a-menu-item
+          >
           <a-menu-item key="settings-profile">Profile</a-menu-item>
           <a-menu-item key="settings-preferences">Preferences</a-menu-item>
         </a-sub-menu>
