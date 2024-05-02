@@ -1,7 +1,7 @@
 <script setup>
 import { ref, onMounted } from 'vue'
 import { projectListAPI } from '@/utils/api'
-import DashboardLayout from '@/components/dashboard-layout.vue'
+import DashboardLayout from '@/components/layouts/dashboard-layout.vue'
 import ProjectCard from '@/components/home/index/project-card.vue'
 import ProjectAddModal from '@/components/home/index/project-add-modal.vue'
 
@@ -27,33 +27,41 @@ const showAddProjectModal = ref(false)
 
 <template>
   <dashboard-layout page="home">
-    <div style="margin-bottom: 20px">
-      <a-flex justify="space-between">
-        <a-input-search
-          v-model:value="projectSearchValue"
-          placeholder="Search projects"
-          style="width: 300px"
-          @search="searchProject"
-        />
-        <a-button type="primary" @click="() => showAddProjectModal = true">Add project +</a-button>
-      </a-flex>
-    </div>
+    <div class="tk-main-content">
+      <div style="margin-bottom: 20px">
+        <a-flex justify="space-between">
+          <a-input-search
+            v-model:value="projectSearchValue"
+            placeholder="Search projects"
+            style="width: 300px"
+            @search="searchProject"
+          />
+          <a-button type="primary" @click="() => (showAddProjectModal = true)"
+            >Add project +</a-button
+          >
+        </a-flex>
+      </div>
 
-    <div>
-      <a-row :gutter="16">
-        <a-col
-          v-for="project in projects"
-          :key="project.id"
-          class="gutter-row"
-          :span="6"
-        >
-          <project-card :project="project"></project-card>
-        </a-col>
-      </a-row>
-    </div>
+      <div>
+        <a-row :gutter="16">
+          <a-col
+            v-for="project in projects"
+            :key="project.id"
+            class="gutter-row"
+            :span="6"
+          >
+            <project-card :project="project"></project-card>
+          </a-col>
+        </a-row>
+      </div>
 
-    <a-modal :footer="false" title="Add project" v-model:open="showAddProjectModal">
-      <project-add-modal></project-add-modal>
-    </a-modal>
+      <a-modal
+        :footer="false"
+        title="Add project"
+        v-model:open="showAddProjectModal"
+      >
+        <project-add-modal></project-add-modal>
+      </a-modal>
+    </div>
   </dashboard-layout>
 </template>

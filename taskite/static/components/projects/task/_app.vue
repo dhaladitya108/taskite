@@ -1,5 +1,5 @@
 <script setup>
-import DashboardLayout from '@/components/dashboard-layout.vue'
+import DashboardLayout from '@/components/layouts/dashboard-layout.vue'
 import TaskDetailModal from '@/components/projects/detail/task-detail-modal.vue'
 
 const props = defineProps(['project', 'task_id'])

@@ -9,7 +9,7 @@ import {
 import { VueDraggable } from 'vue-draggable-plus'
 // import { OnClickOutside } from '@vueuse/components'
 
-import DashboardLayout from '@/components/dashboard-layout.vue'
+import DashboardLayout from '@/components/layouts/dashboard-layout.vue'
 import TaskCard from '@/components/projects/detail/task-card.vue'
 import TaskFilters from '@/components/projects/detail/task-filters.vue'
 import LoadingSpinner from '@/components/common/loading-spinner.vue'
@@ -31,7 +31,7 @@ const fetchStates = async (params = {}) => {
   try {
     loading.value = true
     const { data } = await stateTaskListAPI(project.value.id, params)
-    
+
     states.value = data
   } catch (error) {
     console.log(error)
@@ -126,7 +126,6 @@ async function onAdd(event, state_id) {
 }
 
 function reloadTasksWithNewFilters(newFilters) {
-
   const params = {}
   if (newFilters.selectedPriorities.length > 0) {
     params['priorities'] = newFilters.selectedPriorities
@@ -156,64 +155,75 @@ function addNewTask(state_id, newTask) {
 function activateTaskAddForm(stateId) {
   taskAddActiveForm.value = stateId
 }
-
 </script>
 
 <template>
   <dashboard-layout page="projects">
-    <a-flex justify="space-between" style="margin-bottom: 15px">
-      <div>
-        <a-typography-title :level="4">{{ project.name }}</a-typography-title>
-      </div>
-      <div>
-        <task-filters
-          :members="members"
-          :labels="labels"
-          @filterChange="reloadTasksWithNewFilters"
-        />
-        <a-button type="primary">+ Add Task</a-button>
-      </div>
-    </a-flex>
-
-    <hr />
-
-    <a-flex justify="center" align="center" style="height: 90vh" v-if="loading">
-      <loading-spinner />
-    </a-flex>
-    <a-flex gap="middle" align="start" v-else>
-      <div v-for="state in states" :key="state.id" style="min-width: 320px">
+    <div class="tk-main-content">
+      <a-flex justify="space-between" style="margin-bottom: 15px">
         <div>
-          <a-typography-title :level="5">{{ state.name }}</a-typography-title>
-          <VueDraggable
-            v-model="state.tasks"
-            id="tk-drag"
-            group="tasks"
-            @update="(event) => onUpdate(event, state.id)"
-            @add="(event) => onAdd(event, state.id)"
-          >
-            <task-card
-              v-for="task in state.tasks"
-              :key="task.id"
-              :task="task"
-              :project="project"
-              :members="members"
-            />
-          </VueDraggable>
-
-          <a-typography-link
-            v-show="taskAddActiveForm !== state.id"
-            @click="activateTaskAddForm(state.id)"
-            >+ Add Task</a-typography-link
-          >
-          <task-add-form
-            v-show="taskAddActiveForm === state.id"
-            :stateId="state.id"
-            :projectId="project.id"
-            @newTaskAdded="addNewTask"
-          ></task-add-form>
+          <a-typography-title :level="4">{{ project.name }}</a-typography-title>
         </div>
-      </div>
-    </a-flex>
+        <div>
+          <a-space wrap>
+            <a :href="`/${project.slug}/settings/general/`">
+              <a-button>Settings</a-button>
+            </a>
+            <task-filters
+              :members="members"
+              :labels="labels"
+              @filterChange="reloadTasksWithNewFilters"
+            />
+            <a-button type="primary">+ Add Task</a-button>
+          </a-space>
+        </div>
+      </a-flex>
+
+      <hr />
+
+      <a-flex
+        justify="center"
+        align="center"
+        style="height: 90vh"
+        v-if="loading"
+      >
+        <loading-spinner />
+      </a-flex>
+      <a-flex gap="middle" align="start" v-else>
+        <div v-for="state in states" :key="state.id" style="min-width: 320px">
+          <div>
+            <a-typography-title :level="5">{{ state.name }}</a-typography-title>
+            <VueDraggable
+              v-model="state.tasks"
+              id="tk-drag"
+              group="tasks"
+              @update="(event) => onUpdate(event, state.id)"
+              @add="(event) => onAdd(event, state.id)"
+            >
+              <task-card
+                v-for="task in state.tasks"
+                :key="task.id"
+                :task="task"
+                :project="project"
+                :members="members"
+              />
+            </VueDraggable>
+
+            <a-typography-link
+              v-show="taskAddActiveForm !== state.id"
+              @click="activateTaskAddForm(state.id)"
+              >+ Add Task</a-typography-link
+            >
+            <task-add-form
+              v-show="taskAddActiveForm === state.id"
+              :stateId="state.id"
+              :projectId="project.id"
+              @newTaskAdded="addNewTask"
+            ></task-add-form>
+          </div>
+        </div>
+      </a-flex>
+    </div>
   </dashboard-layout>
 </template>
 

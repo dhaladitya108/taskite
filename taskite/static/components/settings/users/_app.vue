@@ -1,7 +1,7 @@
 <script setup>
 import { ref, onMounted, computed } from 'vue'
 
-import DashboardLayout from '@/components/dashboard-layout.vue'
+import DashboardLayout from '@/components/layouts/dashboard-layout.vue'
 import { userListAPI } from '@/utils/api'
 import { generateAvatar } from '@/utils/generators'
 
@@ -59,15 +59,17 @@ onMounted(() => {
 
 <template>
   <dashboard-layout>
-    <h1>Members</h1>
-    <a-table :columns="tableColumns" :data-source="tableRows">
-      <template #bodyCell="{ column, record }">
-        <template v-if="column.key == 'username'"
-          ><a-avatar size="small" :src="generateAvatar(record.fullName)">
-          </a-avatar>
-          {{ record.username }}
+    <div class="tk-main-content">
+      <h1>Users</h1>
+      <a-table :columns="tableColumns" :data-source="tableRows">
+        <template #bodyCell="{ column, record }">
+          <template v-if="column.key == 'username'"
+            ><a-avatar size="small" :src="generateAvatar(record.fullName)">
+            </a-avatar>
+            {{ record.username }}
+          </template>
         </template>
-      </template>
-    </a-table>
+      </a-table>
+    </div>
   </dashboard-layout>
 </template>

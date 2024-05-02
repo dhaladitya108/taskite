@@ -12,6 +12,10 @@
           <ProjectOutlined />
           <span>Projects</span>
         </a-menu-item>
+        <a-menu-item key="notifications">
+          <NotificationOutlined />
+          <span>Notifications</span>
+        </a-menu-item>
         <a-sub-menu key="settings">
           <template #title>
             <span>
@@ -20,9 +24,9 @@
             </span>
           </template>
           <a-menu-item key="settings-members"
-            ><a href="/settings/members">Members</a></a-menu-item
+            ><a href="/settings/users/">Users</a></a-menu-item
           >
-          <a-menu-item key="settings-profile">Profile</a-menu-item>
+          <a-menu-item key="settings-profile"><a href="/settings/profile/">Profile</a></a-menu-item>
           <a-menu-item key="settings-preferences">Preferences</a-menu-item>
         </a-sub-menu>
         <a-menu-item key="logout">
@@ -34,7 +38,7 @@
       </a-menu>
     </a-layout-sider>
     <a-layout>
-      <a-layout-content style="margin: 16px 16px; overflow-x: auto">
+      <a-layout-content style="overflow-x: auto">
         <slot></slot>
       </a-layout-content>
       <!-- <a-layout-footer style="text-align: center">
@@ -53,6 +57,7 @@ import {
   SettingOutlined,
   HomeOutlined,
   ProjectOutlined,
+  NotificationOutlined
 } from '@ant-design/icons-vue'
 import { ref } from 'vue'
 
