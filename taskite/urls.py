@@ -7,9 +7,6 @@ from taskite.views.settings import UsersView, ProfileView
 
 # fmt: off
 urlpatterns = [
-    # Public API Endpoints
-    path("api/v1/", include("taskite.api.v1")),
-
     # Internal API Endpoints
     path("api/", include("taskite.api")),
 

@@ -2,7 +2,7 @@
 import { ref, onMounted, computed, watch } from 'vue'
 import {
   stateTaskListAPI,
-  projectMemberListAPI,
+  projectMembersAPI,
   taskUpdateAPI,
   labelListAPI,
 } from '@/utils/api'
@@ -42,7 +42,7 @@ const fetchStates = async (params = {}) => {
 
 const fetchMembers = async () => {
   try {
-    const { data } = await projectMemberListAPI(project.value.id)
+    const { data } = await projectMembersAPI(project.value.id)
     members.value = data
   } catch (error) {
     console.log(error)

@@ -24,8 +24,11 @@ export const userListAPI = () => http.get('/users/')
 
 export const projectCreateAPI = (data) => http.post('/projects/', data)
 export const projectListAPI = () => http.get('/projects/')
-export const projectMemberListAPI = (projectId) =>
+export const projectMembersAPI = (projectId) =>
   http.get(`/projects/${projectId}/members/`)
+
+export const projectMembersListAPI = (projectId) => http.get(`/projects/${projectId}/project_members/`)
+export const projectMemberUpdateAPI = (projectId, projectMemberId, updatedData) => http.patch(`/projects/${projectId}/project_members/${projectMemberId}/`, updatedData)
 
 export const stateTaskListAPI = (projectId, params) =>
   http.get(`/projects/${projectId}/states/`, {

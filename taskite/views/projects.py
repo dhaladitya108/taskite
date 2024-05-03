@@ -56,5 +56,5 @@ class ProjectSettingsMembersView(LoginRequiredMixin, View):
         project = Project.objects.filter(slug=slug).first()
         if not project:
             raise Http404()
-        context = {"props": {"projectSlug": project.slug}}
+        context = {"props": {"projectSlug": project.slug, "projectId": project.id}}
         return render(request, "projects/settings/members.html", context)
