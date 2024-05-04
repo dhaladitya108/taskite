@@ -2,6 +2,7 @@
 import { ref, onMounted, computed } from 'vue'
 
 import ProjectSettingsLayout from '@/components/layouts/project-settings-layout.vue'
+import MemberAddModal from '@/components/projects/settings/members/member-add-modal.vue'
 import { projectMembersListAPI, projectMemberUpdateAPI } from '@/utils/api'
 import { generateAvatar } from '@/utils/generators'
 
@@ -54,15 +55,6 @@ const tableColumns = [
   },
 ]
 
-// const tableRows = computed(() => {
-//   return projectMembers.value.map((member) => {
-//     return {
-//       ...member,
-//       key: user.id,
-//     }
-//   })
-// })
-
 const handleRoleChange = (projectMemberId, role) => {
   const updatedData = {
     role: role,
@@ -73,11 +65,18 @@ const handleRoleChange = (projectMemberId, role) => {
 onMounted(() => {
   fetchMembers()
 })
+
+const showMemberInviteModal = ref(false)
 </script>
 
 <template>
   <ProjectSettingsLayout page="members" :projectSlug="props.projectSlug">
-    <h1>Members</h1>
+    <a-flex gap="middle" justify="end">
+      <a-button type="primary" @click="() => showMemberInviteModal = true">+ Invite Member</a-button>
+      <a-modal v-model:open="showMemberInviteModal">
+        <member-add-modal></member-add-modal>
+      </a-modal>
+    </a-flex>
     <a-table :columns="tableColumns" :data-source="projectMembers">
       <template #bodyCell="{ column, record }">
         <template v-if="column.key == 'username'"
