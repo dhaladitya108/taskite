@@ -40,6 +40,7 @@ STORAGES = {
             "bucket_name": AWS_BUCKET_NAME,
             "access_key": AWS_ACCESS_KEY,
             "secret_key": AWS_SECRET_KEY,
+            "region_name": AWS_REGION
         },
     },
     "staticfiles": {
