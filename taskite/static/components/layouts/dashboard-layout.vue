@@ -63,7 +63,7 @@ import { ref } from 'vue'
 
 const props = defineProps(['page'])
 
-const collapsed = ref(true)
+const collapsed = ref(false)
 const selectedKeys = ref([props.page])
 </script>
 <style scoped>

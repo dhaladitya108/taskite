@@ -33,7 +33,8 @@ class User(BaseUUIDTimestampModel, AbstractBaseUser):
     full_name = models.CharField(max_length=255)
     phone = models.CharField(max_length=30, blank=True, null=True)
     role = models.CharField(max_length=10, choices=Role.choices, default=Role.STAFF)
-    avatar = models.ImageField(blank=True, null=True, upload_to="users/avatars/")
+    avatar = models.ImageField(blank=True, null=True, upload_to="media/admins/")
+    timezone = models.CharField(max_length=100, default="UTC")
 
     display_name = models.CharField(max_length=125, blank=True)
 

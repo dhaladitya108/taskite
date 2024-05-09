@@ -1,5 +1,5 @@
 <script setup>
-import { ref, watch } from 'vue'
+import { ref, watch, computed } from 'vue'
 import { DownOutlined } from '@ant-design/icons-vue'
 import { generateAvatar } from '@/utils/generators'
 
@@ -30,6 +30,14 @@ watch([selectedPriorities, selectedAssignees, selectedLabels], async () => {
 
 function toggleDropdown(event) {
   filterDropdownVisible.value = !filterDropdownVisible.value
+}
+
+const getAvatar = (record) => {
+  if(!record.avatar) {
+    return generateAvatar(record.fullName)
+  }
+
+  return record.avatar
 }
 </script>
 
@@ -62,7 +70,7 @@ function toggleDropdown(event) {
                   :value="member.id"
                   ><a-avatar
                     size="small"
-                    :src="generateAvatar(member.fullName)"
+                    :src="getAvatar(member)"
                     style="margin-right: 7px;"
                   ></a-avatar
                   >{{ member.displayName }}</a-checkbox

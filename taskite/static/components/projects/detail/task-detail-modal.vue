@@ -76,6 +76,14 @@ const handleAssigneeChange = (values) => {
   updateTask({ assigneeIds: values })
   emit('updated', { assignees: props.members.filter((member) => values.includes(member.id)) })
 }
+
+const getAvatar = (record) => {
+  if(!record.avatar) {
+    return generateAvatar(record.fullName)
+  }
+
+  return record.avatar
+}
 </script>
 
 <template>
@@ -159,7 +167,7 @@ const handleAssigneeChange = (values) => {
                   <span role="img"
                     ><a-avatar
                       size="small"
-                      :src="generateAvatar(member.fullName)"
+                      :src="getAvatar(member)"
                     >
                     </a-avatar>
                     {{ member.displayName }}

@@ -6,7 +6,15 @@ from taskite.models import User, Task, State
 class AssigneeSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ["id", "username", "display_name", "email", "full_name", "created_at"]
+        fields = [
+            "id",
+            "username",
+            "display_name",
+            "email",
+            "full_name",
+            "avatar",
+            "created_at",
+        ]
 
 
 class TaskSerializer(serializers.ModelSerializer):

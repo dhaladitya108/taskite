@@ -85,6 +85,20 @@ DATABASES = {
     }
 }
 
+# STORAGES = {
+#     # ...
+#     "default": {
+#         "BACKEND": "taskite.storages.TaskiteFileStorage",
+#         # "OPTIONS": {
+#         #     "location": "/example",
+#         #     "base_url": "/example/",
+#         # },
+#     },
+#     "staticfiles": {
+#         "BACKEND": "django.contrib.staticfiles.storage.StaticFilesStorage",
+#     },
+# }
+
 
 # Password validation
 # https://docs.djangoproject.com/en/5.0/ref/settings/#auth-password-validators

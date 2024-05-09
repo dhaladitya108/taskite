@@ -5,7 +5,17 @@ from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 from django.contrib.auth.forms import ReadOnlyPasswordHashField
 from django.core.exceptions import ValidationError
 
-from taskite.models import User, Project, ProjectMember, State, Task, TaskAssignee, Label, TaskLabel
+from taskite.models import (
+    User,
+    Project,
+    ProjectMember,
+    State,
+    Task,
+    TaskAssignee,
+    Label,
+    TaskLabel,
+    Storage,
+)
 
 
 class UserCreationForm(forms.ModelForm):
@@ -48,7 +58,14 @@ class UserChangeForm(forms.ModelForm):
 
     class Meta:
         model = User
-        fields = ["username", "email", "password", "full_name", "is_active", "is_superuser"]
+        fields = [
+            "username",
+            "email",
+            "password",
+            "full_name",
+            "is_active",
+            "is_superuser",
+        ]
 
 
 class UserAdmin(BaseUserAdmin):
@@ -97,6 +114,7 @@ class LabelAdminInline(admin.TabularInline):
     model = Label
     extra = 0
 
+
 @admin.register(Project)
 class ProjectAdmin(admin.ModelAdmin):
     list_display = ["name", "visibility", "created_at"]
@@ -119,6 +137,11 @@ class TaskLabelInline(admin.TabularInline):
 class TaskAdmin(admin.ModelAdmin):
     list_display = ["task_id", "project", "state", "priority", "created_at"]
     inlines = [TaskAssigneeInline, TaskLabelInline]
+
+
+@admin.register(Storage)
+class StorageAdmin(admin.ModelAdmin):
+    list_display = ["id","bucket", "filename", "confirmed_at", "deleted_at"]
 
 
 # Now register the new UserAdmin...

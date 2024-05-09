@@ -48,7 +48,7 @@ const showAddProjectModal = ref(false)
             v-for="project in projects"
             :key="project.id"
             class="gutter-row"
-            :span="6"
+            :span="8"
           >
             <project-card :project="project"></project-card>
           </a-col>
