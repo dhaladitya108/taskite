@@ -6,6 +6,7 @@ const csrftoken = Cookies.get('csrftoken')
 
 const caseMiddleWareOptions = {
   ignoreHeaders: true,
+  preservedKeys: ['AWSAccessKeyId', 'x-amz-algorithm', 'x-amz-credential', 'x-amz-date', 'x-amz-signature']
 }
 
 export const http = applyCaseMiddleware(
@@ -19,13 +20,21 @@ export const http = applyCaseMiddleware(
 )
 
 export const loginAPI = (data) => http.post('/home/login/', data)
+export const profileUpdateAPI = (data) => http.patch('/home/profile/', data)
 
 export const userListAPI = () => http.get('/users/')
 
+export const storagePresignedURL = (data) => http.post('/storages/presigned-url/', data)
+
 export const projectCreateAPI = (data) => http.post('/projects/', data)
 export const projectListAPI = () => http.get('/projects/')
-export const projectMemberListAPI = (projectId) =>
+export const projectUpdateAPI = (projectId, data) => http.patch(`/projects/${projectId}/`, data)
+
+export const projectMembersAPI = (projectId) =>
   http.get(`/projects/${projectId}/members/`)
+
+export const projectMembersListAPI = (projectId) => http.get(`/projects/${projectId}/project_members/`)
+export const projectMemberUpdateAPI = (projectId, projectMemberId, updatedData) => http.patch(`/projects/${projectId}/project_members/${projectMemberId}/`, updatedData)
 
 export const stateTaskListAPI = (projectId, params) =>
   http.get(`/projects/${projectId}/states/`, {

@@ -1,10 +1,17 @@
+import uuid
 from django.contrib.auth import login
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.views import APIView
+from rest_framework.permissions import IsAuthenticated
 
-from taskite.models import User
-from taskite.api.home.serializers import LoginSerializer
+from taskite.models import User, Storage
+from taskite.api.home.serializers import (
+    LoginSerializer,
+    ProfileUpdateSerializer,
+    ProfileSerializer,
+)
+from taskite.exceptions import InvalidRequestBodyAPIException
 
 
 class LoginAPIView(APIView):
@@ -39,3 +46,35 @@ class LoginAPIView(APIView):
 
         login(request, user)
         return Response(data={"detail": "Login success"}, status=status.HTTP_200_OK)
+
+
+class ProfileAPIView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def patch(self, request):
+        user = request.user
+        serializer = ProfileUpdateSerializer(data=request.data)
+        if not serializer.is_valid():
+            raise InvalidRequestBodyAPIException
+
+        data = serializer.validated_data
+        for attr, value in data.items():
+            prev_value = getattr(user, attr)
+            setattr(user, attr, value)
+            new_value = getattr(user, attr)
+
+            # Handling File Updates
+            if attr == "avatar" and prev_value != new_value:
+                if prev_value:
+                    Storage.delete_upload(prev_value)
+                if new_value:
+                    Storage.confirm_upload(new_value)
+
+        user.save(update_fields=data.keys())
+        response_data = {
+            "detail": "Profile got updated.",
+            "profile": ProfileSerializer(user).data
+        }
+        return Response(
+            data=response_data, status=status.HTTP_200_OK
+        )

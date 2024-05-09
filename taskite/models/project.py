@@ -20,10 +20,12 @@ class Project(BaseUUIDTimestampModel):
         max_length=10, choices=Visibility.choices, default=Visibility.PRIVATE
     )
     created_by = models.ForeignKey("User", on_delete=models.SET_NULL, null=True)
-    thumbnail = models.ImageField(
-        upload_to="projects/thumbnails/", blank=True, null=True
+    cover = models.ImageField(
+        upload_to="media/admins/", blank=True, null=True
     )
     next_task_sequence = models.IntegerField(default=1)
+
+    archived_at = models.DateTimeField(blank=True, null=True)
 
     members = models.ManyToManyField(
         "User",

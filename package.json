@@ -23,6 +23,9 @@
     "@tiptap/pm": "^2.3.0",
     "@tiptap/starter-kit": "^2.3.0",
     "@tiptap/vue-3": "^2.3.0",
+    "@uppy/core": "^3.11.1",
+    "@uppy/dashboard": "^3.8.2",
+    "@uppy/drag-drop": "^3.1.0",
     "@uppy/vue": "^1.1.2",
     "@vueuse/components": "^10.9.0",
     "@vueuse/core": "^10.9.0",
@@ -30,10 +33,13 @@
     "axios": "^1.6.8",
     "axios-case-converter": "^1.1.1",
     "chart.js": "^4.4.2",
+    "dropzone": "^6.0.0-beta.2",
+    "filepond": "^4.31.1",
     "js-cookie": "^3.0.5",
     "lodash": "^4.17.21",
     "vue": "^3.4.21",
     "vue-draggable-plus": "^0.4.0",
+    "vue-filepond": "^7.0.4",
     "vue-smooth-dnd": "^0.8.1"
   },
   "devDependencies": {

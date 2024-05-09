@@ -29,4 +29,10 @@ class TaskNotFoundAPIException(APIException):
 class StateNotFoundAPIException(APIException):
     status_code = status.HTTP_400_BAD_REQUEST
     default_code = "state_not_found"
-    default_detail = "No tate found with the given state ID."
+    default_detail = "No task found with the given state ID."
+
+
+class ProjectMemberNotFoundAPIException(APIException):
+    status_code = status.HTTP_400_BAD_REQUEST
+    default_code = "project_member_not_found"
+    default_detail = "No project member found with the given project ID."

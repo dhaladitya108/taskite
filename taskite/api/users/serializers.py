@@ -14,5 +14,6 @@ class UserSerializer(serializers.ModelSerializer):
             "display_name",
             "role",
             "is_active",
+            "avatar",
             "created_at"
         ]

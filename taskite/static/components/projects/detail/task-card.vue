@@ -33,15 +33,46 @@ function openTaskDetailModal() {
 
 const handleTaskUpdateFromModal = (payload) => {
   emit('updated', payload)
-  
+
   Object.keys(payload).forEach((key) => {
     task[key] = payload[key]
   })
 }
+
+const getAvatar = (record) => {
+  if (!record.avatar) {
+    return generateAvatar(record.fullName)
+  }
+
+  return record.avatar
+}
+
+const getPriorityCardColor = computed(() => {
+  switch (task.priority) {
+    case 'urgent':
+      return '#fff2f2'
+
+    case 'high':
+      return '#ffecde'
+
+    case 'medium':
+      return '#deefff'
+
+    case 'low':
+      return '#cccccc'
+
+    default:
+      return ''
+  }
+})
 </script>
 
 <template>
-  <a-card id="task-card" size="small" @click="openTaskDetailModal">
+  <a-card
+    id="task-card"
+    size="small"
+    @click="openTaskDetailModal"
+  >
     <a-flex justify="space-between">
       <div>
         <a-typography-text type="secondary" style="font-size: smaller">{{
@@ -63,8 +94,7 @@ const handleTaskUpdateFromModal = (payload) => {
           v-for="assignee in task.assignees"
           :key="assignee.id"
         >
-          <a-avatar size="small" :src="generateAvatar(assignee.fullName)">
-          </a-avatar>
+          <a-avatar size="small" :src="getAvatar(assignee)"> </a-avatar>
         </a-tooltip>
       </a-avatar-group>
     </a-flex>

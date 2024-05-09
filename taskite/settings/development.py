@@ -18,3 +18,24 @@ CORS_URLS_REGEX = r"^/api/.*$"
 DATABASES = {
     "default": dj_database_url.config(default=os.environ.get("DATABASE_URL"))
 }
+
+AWS_BUCKET_NAME = os.environ.get("AWS_BUCKET_NAME")
+AWS_ACCESS_KEY = os.environ.get("AWS_ACCESS_KEY")
+AWS_SECRET_KEY = os.environ.get("AWS_SECRET_KEY")
+AWS_REGION = os.environ.get("AWS_REGION", None)
+AWS_ENDPOINT = os.environ.get("AWS_ENDPOINT")
+
+STORAGES = {
+    "default": {
+        "BACKEND": "storages.backends.s3.S3Storage",
+        "OPTIONS": {
+            "bucket_name": AWS_BUCKET_NAME,
+            "access_key": AWS_ACCESS_KEY,
+            "secret_key": AWS_SECRET_KEY,
+            "endpoint_url": AWS_ENDPOINT,
+        },
+    },
+    "staticfiles": {
+        "BACKEND": "django.contrib.staticfiles.storage.StaticFilesStorage",
+    },
+}
