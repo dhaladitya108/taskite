@@ -33,12 +33,16 @@ class StoragePresignedURLAPIView(APIView):
         data = serializer.validated_data
         upload_key = Storage.get_upload_path(filename=data.get("filename"))
 
+        extra_kwargs = {}
+        if settings.AWS_ENDPOINT is not None:
+            extra_kwargs["endpoint_url"] = settings.AWS_ENDPOINT
+
         client = boto3.client(
             "s3",
-            endpoint_url=settings.AWS_ENDPOINT,
             aws_access_key_id=settings.AWS_ACCESS_KEY,
             aws_secret_access_key=settings.AWS_SECRET_KEY,
             config=s3_config,
+            **extra_kwargs
         )
         res = client.generate_presigned_post(settings.AWS_BUCKET_NAME, upload_key)
         res_data = {
