@@ -33,6 +33,7 @@ STORAGES = {
             "access_key": AWS_ACCESS_KEY,
             "secret_key": AWS_SECRET_KEY,
             "endpoint_url": AWS_ENDPOINT,
+            "region_name": AWS_REGION
         },
     },
     "staticfiles": {
