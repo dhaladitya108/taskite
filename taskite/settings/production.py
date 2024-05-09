@@ -2,7 +2,12 @@ import os
 from taskite.settings.base import *
 import dj_database_url
 from dotenv import load_dotenv
+import sentry_sdk
 
+sentry_sdk.init(
+    dsn=os.environ.get("SENTRY_DSN"),
+    enable_tracing=True,
+)
 # Enable this if you want to pic environment variables from .env file in a prod env.
 # load_dotenv()
 
