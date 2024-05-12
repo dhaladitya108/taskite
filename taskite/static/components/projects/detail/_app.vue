@@ -189,7 +189,7 @@ function activateTaskAddForm(stateId) {
       >
         <loading-spinner />
       </a-flex>
-      <a-flex gap="middle" align="start" v-else>
+      <a-flex gap="middle" align="start" class="overflow-y-hidden" v-else>
         <div v-for="state in states" :key="state.id" style="min-width: 320px">
           <div>
             <a-typography-title :level="5">{{ state.name }}</a-typography-title>
