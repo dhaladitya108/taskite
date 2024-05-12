@@ -7,7 +7,7 @@ import { projectMembersListAPI, projectMemberUpdateAPI } from '@/utils/api'
 import { generateAvatar } from '@/utils/generators'
 import { ProjectOutlined, UserSwitchOutlined } from '@ant-design/icons-vue'
 
-const props = defineProps(['project'])
+const props = defineProps(['project', 'role'])
 
 const projectMembers = ref([])
 
@@ -27,7 +27,7 @@ const fetchMembers = async () => {
 
 const updateProjectMember = async (projectMemberId, updatedData) => {
   try {
-    await projectMemberUpdateAPI(props.projectId, projectMemberId, updatedData)
+    await projectMemberUpdateAPI(props.project.id, projectMemberId, updatedData)
   } catch (error) {
     console.log
   }
@@ -130,6 +130,7 @@ const getAvatar = (record) => {
             v-model:value="record.role"
             style="width: 120px"
             @change="(value) => handleRoleChange(record.id, value)"
+            :disabled="props.role !== 'admin'"
           >
             <a-select-option value="admin">Admin</a-select-option>
             <a-select-option value="member">Member</a-select-option>

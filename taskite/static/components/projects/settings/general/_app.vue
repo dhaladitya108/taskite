@@ -11,7 +11,7 @@ import { storagePresignedURL, projectUpdateAPI } from '@/utils/api'
 import { generateAvatar } from '@/utils/generators'
 import { getBase64 } from '@/utils/helpers'
 
-const props = defineProps(['project'])
+const props = defineProps(['project', 'role'])
 
 console.log(props)
 
@@ -126,6 +126,7 @@ const generateProjectSlug = (event) => {
         :model="projectForm"
         id="general"
         @finish="onFinish"
+        :disabled="props.role !== 'admin'"
       >
         <a-form-item name="cover">
           <a-upload

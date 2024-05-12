@@ -97,13 +97,13 @@ class ProjectDetailUpdateDestroyAPIView(ProjectFetchMixin, APIView):
             if attr == "project_id" and prev_value != new_value:
                 tasks = Task.objects.filter(project=project)
                 for task in tasks:
-                    setattr(task, 'task_id', f'{new_value}-{task.sequence}')
+                    setattr(task, "task_id", f"{new_value}-{task.sequence}")
                 Task.objects.bulk_update(tasks, fields=["task_id"])
 
         project.save(update_fields=data.keys())
         response_data = {
             "detail": "Project details got updated.",
-            "project": ProjectSerializer(project).data
+            "project": ProjectSerializer(project).data,
         }
         return Response(data=response_data, status=status.HTTP_200_OK)
 
@@ -124,8 +124,10 @@ class ProjectMembersListAPIView(ProjectFetchMixin, APIView):
 
     def get(self, request, *args, **kwargs):
         project = request.project
-        project_members = ProjectMember.objects.filter(project=project).select_related(
-            "user"
+        project_members = (
+            ProjectMember.objects.filter(project=project)
+            .exclude(user=request.user)
+            .select_related("user")
         )
         serializer = ProjectMemberSerializer(project_members, many=True)
         return Response(data=serializer.data, status=status.HTTP_200_OK)

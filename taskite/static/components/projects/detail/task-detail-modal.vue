@@ -74,16 +74,20 @@ const handleTaskTypeChange = (value) => {
 const assigneeIds = ref([])
 const handleAssigneeChange = (values) => {
   updateTask({ assigneeIds: values })
-  emit('updated', { assignees: props.members.filter((member) => values.includes(member.id)) })
+  emit('updated', {
+    assignees: props.members.filter((member) => values.includes(member.id)),
+  })
 }
 
-const getAvatar = (record) => {
-  if(!record.avatar) {
-    return generateAvatar(record.fullName)
+const assigneeOptions = props.members.map((member) => {
+  return {
+    ...member,
+    value: member.id,
+    label: member.displayName,
+    avatar: !!member.avatar ? member.avatar : generateAvatar(member.fullName),
   }
+})
 
-  return record.avatar
-}
 </script>
 
 <template>
@@ -115,7 +119,7 @@ const getAvatar = (record) => {
       <a-col :span="8">
         <a-flex>
           <a-form
-            layout="horizontal"
+            layout="vertical"
             :wrapper-col="{
               span: 14,
             }"
@@ -158,21 +162,20 @@ const getAvatar = (record) => {
                 mode="multiple"
                 option-label-prop="children"
                 @change="handleAssigneeChange"
+                style="width: 150px"
+                :options="assigneeOptions"
               >
-                <a-select-option
-                  :value="member.id"
-                  :label="member.displayName"
-                  v-for="member in props.members"
+                <template #option="{ value: val, label, avatar }">
+                  <a-avatar :src="avatar" size="small"></a-avatar>
+                  <span style="margin-left: 7px;">{{ label }}</span>
+                </template>
+                <template
+                  #tagRender="{ value: val, label, closable, onClose, option }"
                 >
-                  <span role="img"
-                    ><a-avatar
-                      size="small"
-                      :src="getAvatar(member)"
-                    >
-                    </a-avatar>
-                    {{ member.displayName }}
-                  </span>
-                </a-select-option>
+                  <a-avatar-group :closable="closable" @close="onClose">
+                    <a-avatar :src="option.avatar" size="small"></a-avatar>
+                  </a-avatar-group>
+                </template>
               </a-select>
             </a-form-item>
           </a-form>

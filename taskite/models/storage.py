@@ -17,6 +17,7 @@ class Storage(BaseUUIDTimestampModel):
 
     class Meta:
         db_table = "storages"
+        ordering = ("-created_at",)
 
     def __str__(self) -> str:
         return self.filename

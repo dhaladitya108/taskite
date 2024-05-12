@@ -4,7 +4,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import render
 from django.http import Http404
 
-from taskite.models import Project, User, State, Task
+from taskite.models import Project, User, State, Task, ProjectMember
 from taskite.serializers import ProjectSerializer
 
 
@@ -43,9 +43,20 @@ class ProjectSettingsGeneralView(LoginRequiredMixin, View):
         if not project:
             raise Http404()
 
+        project_member = ProjectMember.objects.filter(
+            project=project, user=request.user
+        ).first()
+        if not project_member:
+            raise Http404()
+
         serializer = ProjectSerializer(project)
-        
-        context = {"props": {"project": humps.camelize(serializer.data)}}
+
+        context = {
+            "props": {
+                "project": humps.camelize(serializer.data),
+                "role": project_member.role,
+            }
+        }
         return render(request, "projects/settings/general.html", context)
 
 
@@ -54,8 +65,19 @@ class ProjectSettingsMembersView(LoginRequiredMixin, View):
         project = Project.objects.filter(slug=slug).first()
         if not project:
             raise Http404()
-        
+
+        project_member = ProjectMember.objects.filter(
+            project=project, user=request.user
+        ).first()
+        if not project_member:
+            raise Http404()
+
         serializer = ProjectSerializer(project)
-        
-        context = {"props": {"project": humps.camelize(serializer.data)}}
+
+        context = {
+            "props": {
+                "project": humps.camelize(serializer.data),
+                "role": project_member.role,
+            }
+        }
         return render(request, "projects/settings/members.html", context)

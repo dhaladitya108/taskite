@@ -102,7 +102,7 @@ const getPriorityCardColor = computed(() => {
 
   <a-modal
     v-model:open="showTaskDetailModal"
-    width="800px"
+    width="1000px"
     :footer="null"
     :destroyOnClose="true"
   >
