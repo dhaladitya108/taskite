@@ -17,6 +17,7 @@ class ProjectSerializer(serializers.ModelSerializer):
             "slug",
             "cover",
             "cover_url",
+            "theme_color",
             "visibility",
             "created_at",
         ]
@@ -37,6 +38,8 @@ class ProjectUpdateSerializer(serializers.Serializer):
     )
     cover = serializers.CharField(required=False)
     description = serializers.CharField(required=False)
+    theme_color = serializers.CharField(required=False)
+
 
 class MemberSerializer(serializers.ModelSerializer):
     class Meta:

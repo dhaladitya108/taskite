@@ -4,8 +4,13 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import render
 from django.http import Http404
 
-from taskite.models import Project, User, State, Task, ProjectMember
+from taskite.models import Project, Task, ProjectMember
 from taskite.serializers import ProjectSerializer
+
+
+class ProjectListView(LoginRequiredMixin, View):
+    def get(self, request):
+        return render(request, "projects/list.html")
 
 
 class ProjectDetailView(LoginRequiredMixin, View):
@@ -13,9 +18,11 @@ class ProjectDetailView(LoginRequiredMixin, View):
         project = Project.objects.filter(slug=slug).first()
         if not project:
             raise Http404()
+        
+        serializer = ProjectSerializer(project)
         context = {
             "props": {
-                "project": ProjectSerializer(project).data,
+                "project": humps.camelize(serializer.data),
             }
         }
         return render(request, "projects/detail.html", context)

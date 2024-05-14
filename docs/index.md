@@ -12,7 +12,7 @@ hero:
       link: /introduction/home
     - theme: alt
       text: Demo
-      link: "https://demo.taskite.santoshkpatro.com"
+      link: "https://taskite.in"
 
 features:
   - title: Feature A

@@ -1,7 +1,7 @@
 <script setup>
 import DashboardLayout from '@/components/layouts/dashboard-layout.vue'
 import { AlignLeftOutlined, UserSwitchOutlined, DatabaseOutlined, HighlightOutlined } from '@ant-design/icons-vue';
-const props = defineProps(['page', 'projectSlug'])
+const props = defineProps(['page', 'projectSlug', 'themeColor'])
 
 import { ref } from 'vue'
 const onCollapse = (collapsed, type) => {
@@ -12,7 +12,7 @@ const selectedKeys = ref([props.page])
 </script>
 
 <template>
-  <dashboard-layout page="projects">
+  <dashboard-layout page="projects" :themeColor="props.themeColor">
     <a-layout>
       <a-layout-sider
         breakpoint="lg"

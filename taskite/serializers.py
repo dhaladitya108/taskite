@@ -16,6 +16,7 @@ class ProjectSerializer(serializers.ModelSerializer):
             "description",
             "cover",
             "cover_url",
+            "theme_color",
             "visibility",
             "project_id",
             "created_at",

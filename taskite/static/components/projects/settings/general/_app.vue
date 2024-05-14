@@ -13,8 +13,6 @@ import { getBase64 } from '@/utils/helpers'
 
 const props = defineProps(['project', 'role'])
 
-console.log(props)
-
 const projectForm = ref({
   ...props.project,
 })
@@ -97,10 +95,14 @@ const generateProjectSlug = (event) => {
     .trim()
     .replace(/\s+/g, '-')
 }
+
+const resetThemeColor = () => {
+  projectForm.value.themeColor = "#1677ff"
+}
 </script>
 
 <template>
-  <ProjectSettingsLayout page="general" :projectSlug="projectForm.slug">
+  <ProjectSettingsLayout page="general" :projectSlug="projectForm.slug" :themeColor="props.project.themeColor">
     <div class="tk-breadcrump">
       <a-breadcrumb>
         <a-breadcrumb-item>
@@ -154,6 +156,13 @@ const generateProjectSlug = (event) => {
 
             <a-form-item label="Project ID" name="projectId">
               <a-input v-model:value="projectForm.projectId" />
+            </a-form-item>
+
+            <a-form-item label="Theme color" name="themeColor">
+              <a-flex align="center" gap="middle">
+                <a-input type="color" v-model:value="projectForm.themeColor" class="w-12"></a-input>
+                <a @click="resetThemeColor">Reset</a>
+              </a-flex>
             </a-form-item>
           </a-col>
 

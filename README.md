@@ -7,3 +7,11 @@ Open source Trello, JIRA, Asana alternative.
 ## Run Minio Storage Server
 
 minio server $(pwd)/data --console-address :9001
+
+
+{
+  "token": {
+    "colorPrimary": "#4e89da",
+    "borderRadius": 4
+  }
+}

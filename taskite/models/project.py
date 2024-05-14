@@ -23,6 +23,7 @@ class Project(BaseUUIDTimestampModel):
     cover = models.ImageField(
         upload_to="media/admins/", blank=True, null=True
     )
+    theme_color = models.CharField(max_length=10, default="#1677ff")
     next_task_sequence = models.IntegerField(default=1)
 
     archived_at = models.DateTimeField(blank=True, null=True)

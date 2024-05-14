@@ -158,7 +158,7 @@ function activateTaskAddForm(stateId) {
 </script>
 
 <template>
-  <dashboard-layout page="projects">
+  <dashboard-layout page="projects" :themeColor="project.themeColor">
     <div class="tk-main-content">
       <a-flex justify="space-between" style="margin-bottom: 15px">
         <div>

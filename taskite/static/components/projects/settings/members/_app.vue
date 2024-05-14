@@ -79,7 +79,7 @@ const getAvatar = (record) => {
 </script>
 
 <template>
-  <ProjectSettingsLayout page="members" :projectSlug="props.project.slug">
+  <ProjectSettingsLayout page="members" :projectSlug="props.project.slug" :themeColor="props.project.themeColor">
     <a-flex justify="space-between">
       <div class="tk-breadcrump">
         <a-breadcrumb>
