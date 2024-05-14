@@ -296,3 +296,5 @@ docs/.vitepress/cache
 
 media/
 data/
+
+.DS_Store
