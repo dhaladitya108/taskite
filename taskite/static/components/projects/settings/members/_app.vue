@@ -2,10 +2,11 @@
 import { ref, onMounted, computed } from 'vue'
 
 import ProjectSettingsLayout from '@/components/layouts/project-settings-layout.vue'
-import MemberAddModal from '@/components/projects/settings/members/member-add-modal.vue'
+import MemberAddForm from '@/components/projects/settings/members/member-add-form.vue'
 import { projectMembersListAPI, projectMemberUpdateAPI } from '@/utils/api'
 import { generateAvatar } from '@/utils/generators'
 import { ProjectOutlined, UserSwitchOutlined } from '@ant-design/icons-vue'
+import { message } from 'ant-design-vue'
 
 const props = defineProps(['project', 'role'])
 
@@ -21,15 +22,16 @@ const fetchMembers = async () => {
       }
     })
   } catch (error) {
-    console.log(error)
+    message.error('Failed to fetch project members!')
   }
 }
 
 const updateProjectMember = async (projectMemberId, updatedData) => {
   try {
     await projectMemberUpdateAPI(props.project.id, projectMemberId, updatedData)
+    message.success('Member detail updated!')
   } catch (error) {
-    console.log
+    message.error('Failed to update project member details!')
   }
 }
 
@@ -84,8 +86,10 @@ const getAvatar = (record) => {
       <div class="tk-breadcrump">
         <a-breadcrumb>
           <a-breadcrumb-item>
-            <project-outlined></project-outlined>
-            <span>Projects</span>
+            <a href="/projects">
+              <project-outlined></project-outlined>
+              <span>Projects</span>
+            </a>
           </a-breadcrumb-item>
           <a-breadcrumb-item
             ><a :href="`/${props.project.slug}/`">{{
@@ -104,8 +108,8 @@ const getAvatar = (record) => {
       <a-button type="primary" @click="() => (showMemberInviteModal = true)"
         >+ Invite Member</a-button
       >
-      <a-modal v-model:open="showMemberInviteModal">
-        <member-add-modal></member-add-modal>
+      <a-modal v-model:open="showMemberInviteModal" :footer="null">
+        <member-add-form :projectId="props.project.id"></member-add-form>
       </a-modal>
     </a-flex>
     <a-flex gap="middle" justify="end"> </a-flex>

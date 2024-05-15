@@ -2,6 +2,7 @@ from django.db import models
 from django.utils.text import slugify
 from django.dispatch import receiver
 from django.db.models.signals import post_save
+from django.utils import timezone
 
 from taskite.models.base import BaseUUIDTimestampModel
 
@@ -88,6 +89,9 @@ class ProjectMember(BaseUUIDTimestampModel):
         related_query_name="user_project",
     )
     role = models.CharField(max_length=10, choices=Role.choices, default=Role.MEMBER)
+    is_active = models.BooleanField(default=True)
+    joined_at = models.DateTimeField(blank=True, null=True)
+    invited_at = models.DateTimeField(blank=True, null=True)
 
     class Meta:
         db_table = "project_members"
@@ -108,27 +112,6 @@ class ProjectMember(BaseUUIDTimestampModel):
         if created:
             project_member = ProjectMember(user=instance.created_by, project=instance)
             project_member.role = ProjectMember.Role.ADMIN
+            project_member.joined_at = timezone.now()
             project_member.save()
 
-
-class ProjectMemberInvite(BaseUUIDTimestampModel):
-    project = models.ForeignKey(
-        "Project", on_delete=models.CASCADE, related_name="member_invites"
-    )
-    email = models.EmailField()
-    message = models.TextField(blank=True, null=True)
-    accepted_at = models.DateTimeField(blank=True, null=True)
-    role = models.CharField(
-        max_length=10,
-        choices=ProjectMember.Role.choices,
-        default=ProjectMember.Role.MEMBER,
-    )
-
-    class Meta:
-        db_table = "project_member_invites"
-        verbose_name = "Project Member Invite"
-        verbose_name_plural = "Project Member Invites"
-        ordering = ("-created_at",)
-
-    def __str__(self):
-        return str(self.id)

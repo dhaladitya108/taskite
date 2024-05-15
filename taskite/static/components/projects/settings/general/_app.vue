@@ -74,7 +74,7 @@ const updateProject = async (projectData) => {
     loading.value = true
     const { data } = await projectUpdateAPI(props.project.id, projectData)
     message.success(data.detail)
-    projectForm.value = data.project
+    window.location.reload()
   } catch (error) {
     console.log(error)
   } finally {
@@ -106,8 +106,10 @@ const resetThemeColor = () => {
     <div class="tk-breadcrump">
       <a-breadcrumb>
         <a-breadcrumb-item>
-          <project-outlined></project-outlined>
-          <span>Projects</span>
+          <a href="/projects">
+            <project-outlined></project-outlined>
+            <span>Projects</span>
+          </a>
         </a-breadcrumb-item>
         <a-breadcrumb-item
           ><a :href="`/${projectForm.slug}/`">{{

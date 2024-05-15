@@ -14,6 +14,7 @@ from taskite.api.projects.serializers import (
     ProjectMemberSerializer,
     ProjectMemberUpdateSerializer,
     ProjectUpdateSerializer,
+    ProjectMemberInviteSerializer
 )
 from taskite.exceptions import (
     ProjectMemberNotFoundAPIException,
@@ -155,3 +156,17 @@ class ProjectMemberRetrieveUpdateDestroyAPIView(ProjectFetchMixin, APIView):
 
         project_member_serializer = ProjectMemberSerializer(project_member)
         return Response(data=project_member_serializer.data, status=status.HTTP_200_OK)
+
+
+class ProjectMemberInvitesAPIView(ProjectFetchMixin, APIView):
+    permission_classes = [IsAuthenticated, ProjectMemberAPIPermission]
+
+    def post(self, request, *args, **kwargs):
+        serializer = ProjectMemberInviteSerializer(data=request.data)
+        if not serializer.is_valid():
+            raise InvalidRequestBodyAPIException
+        
+        data = serializer.validated_data
+        project = request.project
+
+        return Response(data={}, status=status.HTTP_200_OK)

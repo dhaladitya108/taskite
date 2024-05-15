@@ -71,3 +71,8 @@ class ProjectMemberSerializer(serializers.ModelSerializer):
 
 class ProjectMemberUpdateSerializer(serializers.Serializer):
     role = serializers.ChoiceField(choices=ProjectMember.Role.choices)
+
+
+class ProjectMemberInviteSerializer(serializers.Serializer):
+    emails = serializers.ListField()
+    role = serializers.ChoiceField(choices=ProjectMember.Role.choices)
