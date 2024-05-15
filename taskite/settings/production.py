@@ -32,6 +32,7 @@ AWS_ACCESS_KEY = os.environ.get("AWS_ACCESS_KEY")
 AWS_SECRET_KEY = os.environ.get("AWS_SECRET_KEY")
 AWS_REGION = os.environ.get("AWS_REGION")
 AWS_ENDPOINT = os.environ.get("AWS_ENDPOINT", None)
+AWS_BUKCET_CUSTOM_DOMAIN = os.environ.get("AWS_BUKCET_CUSTOM_DOMAIN", None)
 
 STORAGES = {
     "default": {
@@ -41,7 +42,8 @@ STORAGES = {
             "access_key": AWS_ACCESS_KEY,
             "secret_key": AWS_SECRET_KEY,
             "region_name": AWS_REGION,
-            "endpoint_url": AWS_ENDPOINT
+            "endpoint_url": AWS_ENDPOINT,
+            "custom_domain": AWS_BUKCET_CUSTOM_DOMAIN
         },
     },
     "staticfiles": {
