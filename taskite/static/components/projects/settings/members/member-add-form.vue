@@ -4,6 +4,7 @@ import { projectMemberInviteAPI } from '@/utils/api'
 import { message } from 'ant-design-vue'
 
 const props = defineProps(['projectId'])
+const emit = defineEmits(['memberInvited'])
 
 const memberRoleChoices = [
   {
@@ -36,10 +37,15 @@ const submitForm = async (values) => {
 
   try {
     await projectMemberInviteAPI(props.projectId, data)
+    emit('memberInvited')
   } catch (error) {
     message.error('Failed to invite members')
   } finally {
     loading.value = false
+
+    // Resetting the form
+    inviteForm.value.emails = []
+    inviteForm.value.role = "member"
   }
 }
 </script>
@@ -47,19 +53,12 @@ const submitForm = async (values) => {
 <template>
   <h2>Invite Members</h2>
   <a-form layout="vertical" :model="inviteForm" @finish="submitForm">
-    <a-form-item
-      label="Emails"
-      name="emails"
-      :rules="[{ required: true, message: 'Please enter invitees email!' }]"
-      extra="For multiple emails, please enter emails with comma separated"
-    >
+    <a-form-item label="Emails" name="emails" :rules="[{ required: true, message: 'Please enter invitees email!' }]"
+      extra="For multiple emails, please enter emails with comma separated">
       <a-textarea v-model:value="inviteForm.emails" :rows="4"></a-textarea>
     </a-form-item>
     <a-form-item label="Role" name="role">
-      <a-select
-        :options="memberRoleChoices"
-        v-model:value="inviteForm.role"
-      ></a-select>
+      <a-select :options="memberRoleChoices" v-model:value="inviteForm.role"></a-select>
     </a-form-item>
     <a-form-item>
       <a-button html-type="submit" type="primary" :loading>Invite</a-button>

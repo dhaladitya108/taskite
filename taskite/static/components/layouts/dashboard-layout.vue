@@ -17,8 +17,6 @@ const props = defineProps({
   },
 })
 
-console.log(props)
-
 const collapsed = ref(false)
 const selectedKeys = ref([props.page])
 
@@ -48,7 +46,7 @@ const theme = computed(() => {
               <span>Projects</span>
             </a>
           </a-menu-item>
-          <a-menu-item key="notifications">
+          <a-menu-item key="notifications" disabled>
             <ShareAltOutlined />
             <span>Integrations</span>
           </a-menu-item>
@@ -59,10 +57,8 @@ const theme = computed(() => {
                 <span>Settings</span>
               </span>
             </template>
-            <a-menu-item key="settings-profile"
-              ><a href="/settings/profile/">Profile</a></a-menu-item
-            >
-            <a-menu-item key="settings-preferences">Preferences</a-menu-item>
+            <a-menu-item key="settings-profile"><a href="/settings/profile/">Profile</a></a-menu-item>
+            <a-menu-item key="settings-preferences" disabled>Preferences</a-menu-item>
           </a-sub-menu>
           <a-menu-item key="logout">
             <a href="/logout">
@@ -93,6 +89,7 @@ const theme = computed(() => {
 .site-layout .site-layout-background {
   background: #fff;
 }
+
 [data-theme='dark'] .site-layout .site-layout-background {
   background: #141414;
 }

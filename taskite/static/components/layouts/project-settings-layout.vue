@@ -14,26 +14,14 @@ const selectedKeys = ref([props.page])
 <template>
   <dashboard-layout page="projects" :themeColor="props.themeColor">
     <a-layout>
-      <a-layout-sider
-        breakpoint="lg"
-        collapsed-width="0"
-        @collapse="onCollapse"
-      >
+      <a-layout-sider breakpoint="lg" collapsed-width="0" @collapse="onCollapse">
         <!-- <div class="logo" /> -->
         <a-menu v-model:selectedKeys="selectedKeys" theme="dark" mode="inline">
           <a-menu-item key="general">
             <a :href="`/${props.projectSlug}/settings/general/`">
-              <align-left-outlined /> 
+              <align-left-outlined />
               <span class="nav-text">General</span>
             </a>
-          </a-menu-item>
-          <a-menu-item key="2">
-            <database-outlined />
-            <span class="nav-text">States</span>
-          </a-menu-item>
-          <a-menu-item key="3">
-            <highlight-outlined />
-            <span class="nav-text">Labels</span>
           </a-menu-item>
           <a-menu-item key="members">
             <a :href="`/${props.projectSlug}/settings/members/`">
@@ -41,13 +29,19 @@ const selectedKeys = ref([props.page])
               <span class="nav-text">Members</span>
             </a>
           </a-menu-item>
+          <a-menu-item key="2" disabled>
+            <database-outlined />
+            <span class="nav-text">States</span>
+          </a-menu-item>
+          <a-menu-item key="3" disabled>
+            <highlight-outlined />
+            <span class="nav-text">Labels</span>
+          </a-menu-item>
         </a-menu>
       </a-layout-sider>
       <a-layout>
         <a-layout-content :style="{ margin: '24px 16px 0' }">
-          <div
-            :style="{ padding: '24px', background: '#fff', minHeight: '100vh' }"
-          >
+          <div :style="{ padding: '24px', background: '#fff', minHeight: '100vh' }">
             <slot></slot>
           </div>
         </a-layout-content>

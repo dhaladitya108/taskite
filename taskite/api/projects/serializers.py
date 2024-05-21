@@ -1,6 +1,7 @@
+from django.urls import reverse
 from rest_framework import serializers
 
-from taskite.models import Project, User, ProjectMember
+from taskite.models import Project, User, ProjectMember, ProjectInvite
 
 
 class ProjectSerializer(serializers.ModelSerializer):
@@ -66,7 +67,7 @@ class ProjectMemberSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = ProjectMember
-        fields = ["id", "user", "role", "created_at"]
+        fields = ["id", "user", "role", "joined_at", "created_at"]
 
 
 class ProjectMemberUpdateSerializer(serializers.Serializer):
@@ -76,3 +77,32 @@ class ProjectMemberUpdateSerializer(serializers.Serializer):
 class ProjectMemberInviteSerializer(serializers.Serializer):
     emails = serializers.ListField()
     role = serializers.ChoiceField(choices=ProjectMember.Role.choices)
+
+
+class ProjectInviteSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ProjectInvite
+        fields = [
+            "id",
+            "role",
+            "message",
+            "email",
+            "created_at"
+        ]
+
+
+class ProjectInviteHomeSerializer(serializers.ModelSerializer):
+    project = ProjectSerializer()
+
+    class Meta:
+        model = ProjectInvite
+        fields = [
+            "id",
+            "email",
+            "message",
+            "role",
+            "project",
+            "invited_at",
+            "confirmed_at",
+            "created_at",
+        ]

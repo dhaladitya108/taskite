@@ -68,16 +68,12 @@ const getPriorityCardColor = computed(() => {
 </script>
 
 <template>
-  <a-card
-    id="task-card"
-    size="small"
-    @click="openTaskDetailModal"
-  >
+  <a-card id="task-card" size="small" @click="openTaskDetailModal">
     <a-flex justify="space-between">
       <div>
         <a-typography-text type="secondary" style="font-size: smaller">{{
           task.taskId
-        }}</a-typography-text>
+          }}</a-typography-text>
       </div>
       <a-tag :color="priorityTagColor" :bordered="false">
         <a-typography-text style="font-size: smaller">
@@ -88,32 +84,16 @@ const getPriorityCardColor = computed(() => {
     <div>{{ task.name }}</div>
     <a-flex justify="end">
       <a-avatar-group>
-        <a-tooltip
-          :title="assignee.displayName"
-          placement="top"
-          v-for="assignee in task.assignees"
-          :key="assignee.id"
-        >
+        <a-tooltip :title="assignee.displayName" placement="top" v-for="assignee in task.assignees" :key="assignee.id">
           <a-avatar size="small" :src="getAvatar(assignee)"> </a-avatar>
         </a-tooltip>
       </a-avatar-group>
     </a-flex>
   </a-card>
 
-  <a-modal
-    v-model:open="showTaskDetailModal"
-    width="1000px"
-    :footer="null"
-    :destroyOnClose="true"
-  >
-    <task-detail-modal
-      :taskId="task.id"
-      :projectId="project.id"
-      :projectSlug="project.slug"
-      :projectName="project.name"
-      :members="members"
-      @updated="handleTaskUpdateFromModal"
-    ></task-detail-modal>
+  <a-modal v-model:open="showTaskDetailModal" width="1000px" :footer="null" :destroyOnClose="true">
+    <task-detail-modal :taskId="task.id" :projectId="project.id" :projectSlug="project.slug" :projectName="project.name"
+      :members="members" @updated="handleTaskUpdateFromModal"></task-detail-modal>
   </a-modal>
 </template>
 

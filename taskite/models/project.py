@@ -3,6 +3,7 @@ from django.utils.text import slugify
 from django.dispatch import receiver
 from django.db.models.signals import post_save
 from django.utils import timezone
+from django.urls import reverse
 
 from taskite.models.base import BaseUUIDTimestampModel
 
@@ -21,9 +22,7 @@ class Project(BaseUUIDTimestampModel):
         max_length=10, choices=Visibility.choices, default=Visibility.PRIVATE
     )
     created_by = models.ForeignKey("User", on_delete=models.SET_NULL, null=True)
-    cover = models.ImageField(
-        upload_to="media/admins/", blank=True, null=True
-    )
+    cover = models.ImageField(upload_to="media/admins/", blank=True, null=True)
     theme_color = models.CharField(max_length=10, default="#1677ff")
     next_task_sequence = models.IntegerField(default=1)
 
@@ -90,8 +89,7 @@ class ProjectMember(BaseUUIDTimestampModel):
     )
     role = models.CharField(max_length=10, choices=Role.choices, default=Role.MEMBER)
     is_active = models.BooleanField(default=True)
-    joined_at = models.DateTimeField(blank=True, null=True)
-    invited_at = models.DateTimeField(blank=True, null=True)
+    joined_at = models.DateTimeField()
 
     class Meta:
         db_table = "project_members"
@@ -115,3 +113,24 @@ class ProjectMember(BaseUUIDTimestampModel):
             project_member.joined_at = timezone.now()
             project_member.save()
 
+
+class ProjectInvite(BaseUUIDTimestampModel):
+    class Role(models.TextChoices):
+        ADMIN = ("admin", "Admin")
+        MEMBER = ("member", "Member")
+        GUEST = ("guest", "Guest")
+
+    project = models.ForeignKey(
+        "Project", on_delete=models.CASCADE, related_name="project_invites"
+    )
+    email = models.EmailField()
+    message = models.TextField(blank=True, null=True)
+    role = models.CharField(max_length=10, choices=Role.choices, default=Role.MEMBER)
+    invited_at = models.DateTimeField(blank=True, null=True)
+    confirmed_at = models.DateTimeField(blank=True, null=True)
+
+    class Meta:
+        db_table = "project_invites"
+
+    def __str__(self) -> str:
+        return str(self.id)

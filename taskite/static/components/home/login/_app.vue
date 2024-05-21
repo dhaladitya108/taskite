@@ -31,18 +31,11 @@ const handleLogin = async (values) => {
         <a-typography-title :level="3">Log In</a-typography-title>
       </a-flex>
       <a-form :model="loginForm" layout="vertical" @finish="handleLogin">
-        <a-form-item
-          label="Email"
-          name="email"
-          :rules="[{ required: true, message: 'Please input your email!' }]"
-        >
+        <a-form-item label="Email" name="email" :rules="[{ required: true, message: 'Please input your email!' }]">
           <a-input v-model:value="loginForm.email" />
         </a-form-item>
-        <a-form-item
-          label="Password"
-          name="password"
-          :rules="[{ required: true, message: 'Please input your password!' }]"
-        >
+        <a-form-item label="Password" name="password"
+          :rules="[{ required: true, message: 'Please input your password!' }]">
           <a-input-password v-model:value="loginForm.password" />
         </a-form-item>
         <a-form-item>

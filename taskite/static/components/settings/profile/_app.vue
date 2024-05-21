@@ -50,7 +50,7 @@ const handleAvatarUpload = (file) => {
       uploadDataParams.value = data.fields
 
       resolve()
-      
+
       // profileForm.value.avatarUrl = URL.createObjectURL(file)
       profileForm.value.avatar = data.resourceName
     } catch (error) {
@@ -74,7 +74,7 @@ const updateProfile = async (values) => {
 }
 
 const avatarImageUrl = computed(() => {
-  if(!!profileForm.value.avatarUrl) {
+  if (!!profileForm.value.avatarUrl) {
     return profileForm.value.avatarUrl
   }
 
@@ -88,17 +88,12 @@ const avatarImageUrl = computed(() => {
       <a-flex justify="center">
         <a-form :model="profileForm" layout="vertical" @finish="updateProfile">
           <a-form-item name="avatar" v-model="profileForm.avatar">
-            <a-upload
-              :multiple="false"
-              :show-upload-list="false"
-              name="file"
-              :action="uploadUrl"
-              :data="uploadDataParams"
-              :before-upload="handleAvatarUpload"
-              @change="handleChange"
-            >
+            <a-upload :multiple="false" :show-upload-list="false" name="file" :action="uploadUrl"
+              :data="uploadDataParams" :before-upload="handleAvatarUpload" @change="handleChange">
               <a-avatar v-if="imageLoading" shape="square" :size="72">
-                <template #icon><LoadingOutlined /></template>
+                <template #icon>
+                  <LoadingOutlined />
+                </template>
               </a-avatar>
               <a-avatar v-else :src="avatarImageUrl" shape="square" :size="72">
               </a-avatar>

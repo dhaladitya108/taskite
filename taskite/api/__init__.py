@@ -7,7 +7,10 @@ from taskite.api.projects.views import (
     ProjectMembersListAPIView,
     ProjectMemberRetrieveUpdateDestroyAPIView,
     ProjectDetailUpdateDestroyAPIView,
-    ProjectMemberInvitesAPIView
+    ProjectMemberInvitesAPIView,
+    ProjectInvitesAPIView,
+    ProjectInvitesListCreateAPIView
+
 )
 from taskite.api.states.views import StateListCreateAPIView
 from taskite.api.tasks.views import (
@@ -28,8 +31,11 @@ urlpatterns = [
     path("users/", UserListAPIView.as_view()),
     
     path("projects/", ProjectListCreateAPIView.as_view()),
+    path("projects/invites/", ProjectInvitesAPIView.as_view()),
     path("projects/<uuid:project_id>/", ProjectDetailUpdateDestroyAPIView.as_view()),
     path("projects/<uuid:project_id>/members/", ProjectMembersAPIView.as_view()),
+
+    path("projects/<uuid:project_id>/project_invites/", ProjectInvitesListCreateAPIView.as_view()),
     
     path("projects/<uuid:project_id>/project_members/", ProjectMembersListAPIView.as_view()),
     path("projects/<uuid:project_id>/project_members/invite/", ProjectMemberInvitesAPIView.as_view()),

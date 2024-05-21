@@ -1,10 +1,11 @@
 import humps
 from django.views import View
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.http import Http404
+from django.utils import timezone
 
-from taskite.models import Project, Task, ProjectMember
+from taskite.models import Project, Task, ProjectMember, ProjectInvite
 from taskite.serializers import ProjectSerializer
 
 
@@ -18,7 +19,7 @@ class ProjectDetailView(LoginRequiredMixin, View):
         project = Project.objects.filter(slug=slug).first()
         if not project:
             raise Http404()
-        
+
         serializer = ProjectSerializer(project)
         context = {
             "props": {
@@ -88,3 +89,42 @@ class ProjectSettingsMembersView(LoginRequiredMixin, View):
             }
         }
         return render(request, "projects/settings/members.html", context)
+
+
+class ProjectInviteConfirmationView(LoginRequiredMixin, View):
+    def get(self, request, project_invite_id):
+        project_invite = ProjectInvite.objects.filter(
+            id=project_invite_id,
+            email=request.user.email,
+            confirmed_at__isnull=True,
+        ).first()
+        if not project_invite:
+            raise Http404()
+
+        project_invite.confirmed_at = timezone.now()
+        project_invite.save(update_fields=["confirmed_at"])
+        try:
+            ProjectMember.objects.create(
+                user=request.user,
+                project=project_invite.project,
+                role=project_invite.role,
+                joined_at=timezone.now(),
+            )
+        except Exception:
+            print("Failed to create a project member")
+
+        return redirect("project-detail", slug=project_invite.project.slug)
+
+
+class ProjectInviteRejectionView(LoginRequiredMixin, View):
+    def get(self, request, project_invite_id):
+        project_invite = ProjectInvite.objects.filter(
+            id=project_invite_id,
+            email=request.user.email,
+            confirmed_at__isnull=True,
+        ).first()
+        if not project_invite:
+            raise Http404()
+
+        project_invite.delete()
+        return redirect("index")

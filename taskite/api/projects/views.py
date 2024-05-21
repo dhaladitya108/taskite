@@ -1,10 +1,11 @@
 from django.db import transaction
+from django.utils import timezone
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.views import APIView
 
-from taskite.models import Project, ProjectMember, Storage, Task
+from taskite.models import Project, ProjectMember, Storage, Task, ProjectInvite
 from taskite.permissions import ProjectMemberAPIPermission
 from taskite.mixins import ProjectFetchMixin
 from taskite.api.projects.serializers import (
@@ -14,7 +15,9 @@ from taskite.api.projects.serializers import (
     ProjectMemberSerializer,
     ProjectMemberUpdateSerializer,
     ProjectUpdateSerializer,
-    ProjectMemberInviteSerializer
+    ProjectMemberInviteSerializer,
+    ProjectInviteHomeSerializer,
+    ProjectInviteSerializer,
 )
 from taskite.exceptions import (
     ProjectMemberNotFoundAPIException,
@@ -26,14 +29,16 @@ class ProjectListCreateAPIView(APIView):
     permission_classes = [IsAuthenticated]
 
     def get(self, request):
-        if request.user.role == "admin":
+        if request.user.is_superuser:
             projects = Project.objects.all()
         else:
-            user_projects = Project.objects.filter(project_member__user=request.user)
-            public_projects = Project.objects.filter(
-                visibility=Project.Visibility.PUBLIC
+            projects = Project.objects.filter(
+                project_member__user=request.user,
             )
-            projects = user_projects.union(public_projects, all=False)
+            # public_projects = Project.objects.filter(
+            #     visibility=Project.Visibility.PUBLIC
+            # )
+            # projects = user_projects.union(public_projects, all=False)
 
         serializer = ProjectSerializer(projects, many=True)
         return Response(data=serializer.data, status=status.HTTP_200_OK)
@@ -165,8 +170,55 @@ class ProjectMemberInvitesAPIView(ProjectFetchMixin, APIView):
         serializer = ProjectMemberInviteSerializer(data=request.data)
         if not serializer.is_valid():
             raise InvalidRequestBodyAPIException
-        
+
         data = serializer.validated_data
         project = request.project
 
-        return Response(data={}, status=status.HTTP_200_OK)
+        existing_invite_emails = list(
+            ProjectInvite.objects.filter(
+                project=project, email__in=data["emails"], confirmed_at__isnull=True
+            ).values_list("email", flat=True)
+        )
+        existing_member_emails = list(
+            project.members.all().values_list("email", flat=True)
+        )
+        for email in data["emails"]:
+            if email in existing_invite_emails:
+                continue
+
+            if email in existing_member_emails:
+                continue
+
+            try:
+                ProjectInvite.objects.create(
+                    project=project,
+                    role=data["role"],
+                    email=email,
+                    invited_at=timezone.now(),
+                )
+            except Exception:
+                print("Failed to invite")
+
+        return Response(
+            data={"detail": "Project Invites has been sent!"}, status=status.HTTP_200_OK
+        )
+
+
+class ProjectInvitesListCreateAPIView(ProjectFetchMixin, APIView):
+    permission_classes = [IsAuthenticated, ProjectMemberAPIPermission]
+
+    def get(self, request, *args, **kwargs):
+        project_invites = ProjectInvite.objects.filter(project=request.project, confirmed_at__isnull=True)
+        serializer = ProjectInviteSerializer(project_invites, many=True)
+        return Response(data=serializer.data, status=status.HTTP_200_OK)
+
+
+class ProjectInvitesAPIView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request, *args, **kwargs):
+        project_invites = ProjectInvite.objects.filter(
+            email=request.user.email, confirmed_at__isnull=True
+        ).select_related("project")
+        serializer = ProjectInviteHomeSerializer(project_invites, many=True)
+        return Response(data=serializer.data, status=status.HTTP_200_OK)

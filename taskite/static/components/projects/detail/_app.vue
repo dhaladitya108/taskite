@@ -169,11 +169,7 @@ function activateTaskAddForm(stateId) {
             <a :href="`/${project.slug}/settings/general/`">
               <a-button>Settings</a-button>
             </a>
-            <task-filters
-              :members="members"
-              :labels="labels"
-              @filterChange="reloadTasksWithNewFilters"
-            />
+            <task-filters :members="members" :labels="labels" @filterChange="reloadTasksWithNewFilters" />
             <a-button type="primary">+ Add Task</a-button>
           </a-space>
         </div>
@@ -181,45 +177,23 @@ function activateTaskAddForm(stateId) {
 
       <hr />
 
-      <a-flex
-        justify="center"
-        align="center"
-        style="height: 90vh"
-        v-if="loading"
-      >
+      <a-flex justify="center" align="center" style="height: 90vh" v-if="loading">
         <loading-spinner />
       </a-flex>
       <a-flex gap="middle" align="start" class="overflow-y-hidden" v-else>
         <div v-for="state in states" :key="state.id" style="min-width: 320px">
           <div>
             <a-typography-title :level="5">{{ state.name }}</a-typography-title>
-            <VueDraggable
-              v-model="state.tasks"
-              id="tk-drag"
-              group="tasks"
-              @update="(event) => onUpdate(event, state.id)"
-              @add="(event) => onAdd(event, state.id)"
-            >
-              <task-card
-                v-for="task in state.tasks"
-                :key="task.id"
-                :task="task"
-                :project="project"
-                :members="members"
-              />
+            <VueDraggable v-model="state.tasks" id="tk-drag" group="tasks"
+              @update="(event) => onUpdate(event, state.id)" @add="(event) => onAdd(event, state.id)">
+              <task-card v-for="task in state.tasks" :key="task.id" :task="task" :project="project"
+                :members="members" />
             </VueDraggable>
 
-            <a-typography-link
-              v-show="taskAddActiveForm !== state.id"
-              @click="activateTaskAddForm(state.id)"
-              >+ Add Task</a-typography-link
-            >
-            <task-add-form
-              v-show="taskAddActiveForm === state.id"
-              :stateId="state.id"
-              :projectId="project.id"
-              @newTaskAdded="addNewTask"
-            ></task-add-form>
+            <a-typography-link v-show="taskAddActiveForm !== state.id" @click="activateTaskAddForm(state.id)">+ Add
+              Task</a-typography-link>
+            <task-add-form v-show="taskAddActiveForm === state.id" :stateId="state.id" :projectId="project.id"
+              @newTaskAdded="addNewTask"></task-add-form>
           </div>
         </div>
       </a-flex>

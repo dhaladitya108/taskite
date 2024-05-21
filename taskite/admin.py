@@ -15,6 +15,7 @@ from taskite.models import (
     Label,
     TaskLabel,
     Storage,
+    ProjectInvite,
 )
 
 
@@ -115,10 +116,20 @@ class LabelAdminInline(admin.TabularInline):
     extra = 0
 
 
+class ProjectInviteInline(admin.TabularInline):
+    model = ProjectInvite
+    extra = 0
+
+
 @admin.register(Project)
 class ProjectAdmin(admin.ModelAdmin):
     list_display = ["name", "visibility", "created_at"]
-    inlines = [ProjectMemberInline, StateAdminInline, LabelAdminInline]
+    inlines = [
+        ProjectMemberInline,
+        StateAdminInline,
+        LabelAdminInline,
+        ProjectInviteInline,
+    ]
     raw_id_fields = ["created_by"]
     prepopulated_fields = {"slug": ["name"]}
 
@@ -141,7 +152,7 @@ class TaskAdmin(admin.ModelAdmin):
 
 @admin.register(Storage)
 class StorageAdmin(admin.ModelAdmin):
-    list_display = ["id","bucket", "filename", "confirmed_at", "deleted_at"]
+    list_display = ["id", "bucket", "filename", "confirmed_at", "deleted_at"]
 
 
 # Now register the new UserAdmin...

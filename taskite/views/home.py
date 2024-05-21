@@ -1,13 +1,17 @@
+import humps
 from django.views import View
 from django.shortcuts import render, redirect, HttpResponse
 from django.contrib.auth import logout
 from django.contrib.auth.mixins import LoginRequiredMixin
 
+from taskite.serializers import ProfileSerializer
+
 
 class IndexView(LoginRequiredMixin, View):
     def get(self, request):
-        context = {
-        }
+        user = request.user
+        serializer = ProfileSerializer(user)
+        context = {"props": {"user": humps.camelize(serializer.data)}}
         return render(request, "home/index.html", context)
 
 
