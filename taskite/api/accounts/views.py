@@ -5,12 +5,38 @@ from rest_framework.views import APIView
 from rest_framework.permissions import IsAuthenticated
 
 from taskite.models import User, Storage
-from taskite.api.home.serializers import (
+from taskite.api.accounts.serializers import (
     LoginSerializer,
     ProfileUpdateSerializer,
     ProfileSerializer,
+    RegisterSerializer,
 )
 from taskite.exceptions import InvalidRequestBodyAPIException
+
+
+class RegisterAPIView(APIView):
+    def post(self, request):
+        serializer = RegisterSerializer(data=request.data)
+        if not serializer.is_valid():
+            return Response(
+                data={
+                    "detail": "Invalid information provided.",
+                    "errors": serializer.errors,
+                },
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+        data = serializer.validated_data
+        password = data.pop("password")
+        if User.objects.filter(email=data.get("email")).exists():
+            return Response(
+                data={"detail": "A user already exists with the given email address!"},
+                status=status.HTTP_403_FORBIDDEN,
+            )
+        user = User(**data)
+        user.set_password(password)
+        user.save()
+        login(request, user)
+        return Response(data={"detail": "Register success"}, status=status.HTTP_200_OK)
 
 
 class LoginAPIView(APIView):
@@ -72,8 +98,6 @@ class ProfileAPIView(APIView):
         user.save(update_fields=data.keys())
         response_data = {
             "detail": "Profile got updated.",
-            "profile": ProfileSerializer(user).data
+            "profile": ProfileSerializer(user).data,
         }
-        return Response(
-            data=response_data, status=status.HTTP_200_OK
-        )
+        return Response(data=response_data, status=status.HTTP_200_OK)

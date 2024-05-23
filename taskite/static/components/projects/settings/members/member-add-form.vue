@@ -23,6 +23,7 @@ const memberRoleChoices = [
 
 const inviteForm = ref({
   emails: '',
+  message: '',
   role: 'member',
 })
 const loading = ref(false)
@@ -30,7 +31,7 @@ const loading = ref(false)
 const submitForm = async (values) => {
   const data = {
     ...values,
-    emails: values.emails.split(','),
+    emails: values.emails.split(',').map(email => email.toLowerCase().trim()),
   }
 
   loading.value = true
@@ -55,10 +56,13 @@ const submitForm = async (values) => {
   <a-form layout="vertical" :model="inviteForm" @finish="submitForm">
     <a-form-item label="Emails" name="emails" :rules="[{ required: true, message: 'Please enter invitees email!' }]"
       extra="For multiple emails, please enter emails with comma separated">
-      <a-textarea v-model:value="inviteForm.emails" :rows="4"></a-textarea>
+      <a-textarea v-model:value="inviteForm.emails" :rows="2"></a-textarea>
     </a-form-item>
     <a-form-item label="Role" name="role">
       <a-select :options="memberRoleChoices" v-model:value="inviteForm.role"></a-select>
+    </a-form-item>
+    <a-form-item label="Message" name="message">
+      <a-textarea v-model:value="inviteForm.message" :rows="4"></a-textarea>
     </a-form-item>
     <a-form-item>
       <a-button html-type="submit" type="primary" :loading>Invite</a-button>

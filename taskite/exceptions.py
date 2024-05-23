@@ -14,7 +14,7 @@ class ProjectNotFoundAPIException(APIException):
     default_detail = "No project found with the given project ID."
 
 
-class ProjectPermissionAPIExecption(APIException):
+class ProjectPermissionAPIException(APIException):
     status_code = status.HTTP_401_UNAUTHORIZED
     default_code = "invalid_project_permission"
     default_detail = "No you don't have enough permission to perform this action."
@@ -36,3 +36,9 @@ class ProjectMemberNotFoundAPIException(APIException):
     status_code = status.HTTP_400_BAD_REQUEST
     default_code = "project_member_not_found"
     default_detail = "No project member found with the given project ID."
+
+
+class ProjectInviteNotFoundAPIException(APIException):
+    status_code = status.HTTP_400_BAD_REQUEST
+    default_code = "project_invite_not_found"
+    default_detail = "No project invite found with the given project invite ID."

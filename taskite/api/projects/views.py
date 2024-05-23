@@ -22,6 +22,8 @@ from taskite.api.projects.serializers import (
 from taskite.exceptions import (
     ProjectMemberNotFoundAPIException,
     InvalidRequestBodyAPIException,
+    ProjectInviteNotFoundAPIException,
+    ProjectPermissionAPIException,
 )
 
 
@@ -193,8 +195,8 @@ class ProjectMemberInvitesAPIView(ProjectFetchMixin, APIView):
                 ProjectInvite.objects.create(
                     project=project,
                     role=data["role"],
+                    message=data["message"],
                     email=email,
-                    invited_at=timezone.now(),
                 )
             except Exception:
                 print("Failed to invite")
@@ -204,13 +206,36 @@ class ProjectMemberInvitesAPIView(ProjectFetchMixin, APIView):
         )
 
 
-class ProjectInvitesListCreateAPIView(ProjectFetchMixin, APIView):
+class ProjectInviteListAPIView(ProjectFetchMixin, APIView):
     permission_classes = [IsAuthenticated, ProjectMemberAPIPermission]
 
     def get(self, request, *args, **kwargs):
-        project_invites = ProjectInvite.objects.filter(project=request.project, confirmed_at__isnull=True)
+        project_invites = ProjectInvite.objects.filter(
+            project=request.project, confirmed_at__isnull=True
+        )
         serializer = ProjectInviteSerializer(project_invites, many=True)
         return Response(data=serializer.data, status=status.HTTP_200_OK)
+
+
+class ProjectInviteDestroyAPIView(ProjectFetchMixin, APIView):
+    permission_classes = [IsAuthenticated, ProjectMemberAPIPermission]
+
+    def delete(self, request, *args, **kwargs):
+        # Ensure only project admin have ability to delete project invites.
+        if request.project_role != "admin":
+            raise ProjectPermissionAPIException
+
+        project_invite = ProjectInvite.objects.filter(
+            project=request.project, id=kwargs.get("project_invite_id")
+        ).first()
+        if not project_invite:
+            raise ProjectInviteNotFoundAPIException
+
+        project_invite.delete()
+        return Response(
+            data={"detail": "Project invite has been deleted!"},
+            status=status.HTTP_204_NO_CONTENT,
+        )
 
 
 class ProjectInvitesAPIView(APIView):

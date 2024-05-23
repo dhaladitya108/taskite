@@ -3,6 +3,12 @@ from rest_framework import serializers
 from taskite.models import User
 
 
+class RegisterSerializer(serializers.Serializer):
+    full_name = serializers.CharField()
+    email = serializers.EmailField()
+    password = serializers.CharField()
+
+
 class LoginSerializer(serializers.Serializer):
     email = serializers.EmailField()
     password = serializers.CharField()

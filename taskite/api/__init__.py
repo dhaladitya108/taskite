@@ -1,15 +1,16 @@
 from django.urls import path
 
-from taskite.api.home.views import LoginAPIView, ProfileAPIView
+from taskite.api.accounts.views import LoginAPIView, ProfileAPIView, RegisterAPIView
 from taskite.api.projects.views import (
     ProjectListCreateAPIView,
+    ProjectDetailUpdateDestroyAPIView,
     ProjectMembersAPIView,
     ProjectMembersListAPIView,
     ProjectMemberRetrieveUpdateDestroyAPIView,
-    ProjectDetailUpdateDestroyAPIView,
     ProjectMemberInvitesAPIView,
     ProjectInvitesAPIView,
-    ProjectInvitesListCreateAPIView
+    ProjectInviteListAPIView,
+    ProjectInviteDestroyAPIView
 
 )
 from taskite.api.states.views import StateListCreateAPIView
@@ -25,8 +26,9 @@ from taskite.api.storages.views import StoragePresignedURLAPIView
 urlpatterns = [
     path("storages/presigned-url/", StoragePresignedURLAPIView.as_view()),
     
-    path("home/login/", LoginAPIView.as_view()),
-    path("home/profile/", ProfileAPIView.as_view()),
+    path("accounts/login/", LoginAPIView.as_view()),
+    path("accounts/profile/", ProfileAPIView.as_view()),
+    path("accounts/register/", RegisterAPIView.as_view()),
     
     path("users/", UserListAPIView.as_view()),
     
@@ -35,7 +37,8 @@ urlpatterns = [
     path("projects/<uuid:project_id>/", ProjectDetailUpdateDestroyAPIView.as_view()),
     path("projects/<uuid:project_id>/members/", ProjectMembersAPIView.as_view()),
 
-    path("projects/<uuid:project_id>/project_invites/", ProjectInvitesListCreateAPIView.as_view()),
+    path("projects/<uuid:project_id>/project_invites/", ProjectInviteListAPIView.as_view()),
+    path("projetcs/<uuid:project_id>/project_invites/<uuid:project_invite_id>/", ProjectInviteDestroyAPIView.as_view()),
     
     path("projects/<uuid:project_id>/project_members/", ProjectMembersListAPIView.as_view()),
     path("projects/<uuid:project_id>/project_members/invite/", ProjectMemberInvitesAPIView.as_view()),

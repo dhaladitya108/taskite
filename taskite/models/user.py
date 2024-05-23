@@ -70,5 +70,15 @@ class User(BaseUUIDTimestampModel, AbstractBaseUser):
                 self.display_name = self.full_name.split()[0].lower()
 
             if not self.username:
-                self.username = f"{self.display_name}{random.randint(1, 100)}"
+                username = self.display_name + f"{random.randint(0, 100)}"
+
+                for _ in range(5):  # Limit retries to 5 attempts
+                    if not User.objects.filter(username=username).exists():
+                        break
+                    username = self.display_name + f"{random.randint(0, 100)}"
+                else:
+                    raise ValueError(
+                        "Failed to generate unique username after 5 attempts"
+                    )
+                self.username = username
         return super().save(*args, **kwargs)

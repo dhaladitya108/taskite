@@ -72,6 +72,7 @@ const tableColumns = [
     key: 'role',
   },
   {
+    title: 'Action',
     name: 'Action',
     key: 'action',
   },
@@ -98,6 +99,10 @@ const getAvatar = (record) => {
 
   return record.avatar
 }
+
+const handleDeleteProjectInvite = async (projectInviteId) => {
+  console.log(projectInviteId)
+}
 </script>
 
 <template>
@@ -108,21 +113,22 @@ const getAvatar = (record) => {
           <a-breadcrumb-item>
             <a href="/projects">
               <project-outlined></project-outlined>
-              <span>Projects</span>
+              <span class="ml-1">Projects</span>
             </a>
           </a-breadcrumb-item>
           <a-breadcrumb-item><a :href="`/${props.project.slug}/`">{{ props.project.name }}</a></a-breadcrumb-item>
           <a-breadcrumb-item>
-            <a :href="`/${props.project.slug}/settings/general/`">
+            <a :href="`/${props.project.slug}/settings/members/`">
               <user-switch-outlined></user-switch-outlined>
-              <span style="margin-left: 4px">General</span>
+              <span class="ml-1">Members</span>
             </a>
           </a-breadcrumb-item>
         </a-breadcrumb>
       </div>
 
       <div>
-        <a-button type="primary" @click="() => (showMemberInviteModal = true)">+ Invite Member</a-button>
+        <a-button type="primary" @click="() => (showMemberInviteModal = true)" :disabled="props.role !== 'admin'">+
+          Invite Member</a-button>
         <a-dropdown v-show="projectInvites.length > 0">
           <a-badge :count="projectInvites.length">
             <a-button type="dashed" class="ml-2">Pending Invitations</a-button>
@@ -130,9 +136,11 @@ const getAvatar = (record) => {
 
           <template #overlay>
             <a-card size="small">
-              <div v-for="projectInvite in projectInvites" :key="projectInvite.id">{{ projectInvite.email }} <a-button type="link">Delete</a-button></div>
+              <div v-for="projectInvite in projectInvites" :key="projectInvite.id">{{ projectInvite.email }} <a-button
+                  type="link" :disabled="props.role !== 'admin'"
+                  @click="handleDeleteProjectInvite(projectInvite.id)">Delete</a-button></div>
             </a-card>
-            </template>
+          </template>
         </a-dropdown>
         <a-modal v-model:open="showMemberInviteModal" :footer="null">
           <member-add-form :projectId="props.project.id" @memberInvited="() => fetchProjectInvites()"></member-add-form>
@@ -174,7 +182,7 @@ const getAvatar = (record) => {
         </template>
 
         <template v-if="column.key == 'action'">
-          <a-button>
+          <a-button :disabled="props.role !== 'admin'">
             <template #icon>
               <DeleteOutlined />
             </template>

@@ -52,8 +52,9 @@ const getAvatar = (record) => {
           <a-collapse-panel key="priorities" header="Priorities">
             <a-checkbox-group v-model:value="selectedPriorities">
               <a-flex vertical>
-                <a-checkbox v-for="priority in priorityOptions" :key="priority" :value="priority.value">{{
-                  priority.label }}</a-checkbox>
+                <a-checkbox v-for="priority in priorityOptions" :key="priority" :value="priority.value">
+                  {{ priority.label }}
+                </a-checkbox>
               </a-flex>
             </a-checkbox-group>
           </a-collapse-panel>
@@ -68,8 +69,9 @@ const getAvatar = (record) => {
           <a-collapse-panel key="labels" header="Labels">
             <a-checkbox-group v-model:value="selectedLabels">
               <a-flex vertical>
-                <a-checkbox v-for="label in props.labels" :key="label.id" :value="label.id">{{ label.name
-                  }}</a-checkbox>
+                <a-checkbox v-for="label in props.labels" :key="label.id" :value="label.id">
+                  {{ label.name }}
+                </a-checkbox>
               </a-flex>
             </a-checkbox-group>
           </a-collapse-panel>

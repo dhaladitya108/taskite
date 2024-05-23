@@ -1,0 +1,15 @@
+{% extends '_base.html' %}
+{% load django_vite %}
+{% load static %}
+
+{% block title %}
+Taskite Login
+{% endblock title %}
+
+{% block style %}
+<link rel="stylesheet" href="{% static 'css/home/login.css' %}">
+{% endblock style %}
+
+{% block assets %}
+{% vite_asset 'entrypoints/accounts/register.js' %}
+{% endblock assets %}

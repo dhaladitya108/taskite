@@ -9,7 +9,7 @@ export default defineConfig({
     nav: [
       { text: 'Home', link: '/' },
       { text: 'Guide', link: '/introduction/home' },
-      { text: 'Demo', link: 'https://demo.taskite.santoshkpatro.com' }
+      { text: 'Website', link: 'https://taskite.in' }
     ],
 
     sidebar: [

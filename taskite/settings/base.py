@@ -145,7 +145,7 @@ MEDIA_URL = "media/"
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 AUTH_USER_MODEL = "taskite.User"
-LOGIN_URL = "/login"
+LOGIN_URL = "/accounts/login"
 
 ORGANIZATION_SETTINGS = {
     "organization_name": "Acorn Globus",

@@ -4,6 +4,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import render, redirect
 from django.http import Http404
 from django.utils import timezone
+from django.contrib import messages
 
 from taskite.models import Project, Task, ProjectMember, ProjectInvite
 from taskite.serializers import ProjectSerializer
@@ -89,6 +90,28 @@ class ProjectSettingsMembersView(LoginRequiredMixin, View):
             }
         }
         return render(request, "projects/settings/members.html", context)
+
+
+class ProjectLeaveView(LoginRequiredMixin, View):
+    def get(self, request, slug):
+        project = Project.objects.filter(slug=slug).first()
+        if not project:
+            raise Http404()
+
+        project_member = ProjectMember.objects.filter(
+            project=project, user=request.user
+        ).first()
+        if not project_member:
+            raise Http404()
+        if project.created_by == request.user:
+            messages.warning(
+                request,
+                "You cannot leave an organization without transfering the ownership.",
+            )
+            return redirect("project-settings-general", slug=project.slug)
+
+        project_member.delete()
+        return redirect("project-list")
 
 
 class ProjectInviteConfirmationView(LoginRequiredMixin, View):

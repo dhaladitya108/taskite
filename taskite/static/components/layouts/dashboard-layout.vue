@@ -41,7 +41,7 @@ const theme = computed(() => {
             </a>
           </a-menu-item>
           <a-menu-item key="projects">
-            <a href="/projects">
+            <a href="/projects/">
               <ProjectOutlined />
               <span>Projects</span>
             </a>
@@ -61,7 +61,7 @@ const theme = computed(() => {
             <a-menu-item key="settings-preferences" disabled>Preferences</a-menu-item>
           </a-sub-menu>
           <a-menu-item key="logout">
-            <a href="/logout">
+            <a href="/accounts/logout/">
               <user-outlined />
               <span>Logout</span>
             </a>

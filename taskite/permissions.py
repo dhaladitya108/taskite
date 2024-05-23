@@ -1,7 +1,7 @@
 from rest_framework import permissions
 from taskite.models.project import ProjectMember
 
-from taskite.exceptions import ProjectPermissionAPIExecption
+from taskite.exceptions import ProjectPermissionAPIException
 
 
 class ProjectMemberAPIPermission(permissions.BasePermission):
@@ -11,5 +11,9 @@ class ProjectMemberAPIPermission(permissions.BasePermission):
                 user=request.user, project=request.project
             ).first()
             if not project_member:
-                raise ProjectPermissionAPIExecption
+                raise ProjectPermissionAPIException
+
+            request.project_role = project_member.role
+        else:
+            request.project_role = "admin"
         return super().has_permission(request, view)

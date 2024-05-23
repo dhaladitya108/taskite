@@ -19,8 +19,9 @@ export const http = applyCaseMiddleware(
   caseMiddleWareOptions
 )
 
-export const loginAPI = (data) => http.post('/home/login/', data)
-export const profileUpdateAPI = (data) => http.patch('/home/profile/', data)
+export const loginAPI = (data) => http.post('/accounts/login/', data)
+export const registerAPI = (data) => http.post('/accounts/register/', data)
+export const profileUpdateAPI = (data) => http.patch('/accounts/profile/', data)
 
 export const userListAPI = () => http.get('/users/')
 

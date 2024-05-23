@@ -26,12 +26,6 @@ const createNewProject = async (values) => {
     <a-form-item label="Description" name="description">
       <a-textarea v-model:value="projectAddForm.description" :rows="5" />
     </a-form-item>
-    <a-form-item label="Visibility" name="visibility">
-        <a-radio-group v-model:value="projectAddForm.visibility" name="visibility">
-            <a-radio value="public">Public</a-radio>
-            <a-radio value="private">Private</a-radio>
-        </a-radio-group>
-    </a-form-item>
     <a-form-item>
         <a-button type="primary" html-type="submit">Add</a-button>
     </a-form-item>
