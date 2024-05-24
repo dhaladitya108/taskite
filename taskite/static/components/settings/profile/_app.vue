@@ -3,7 +3,8 @@ import { ref, onMounted, computed } from 'vue'
 import { message } from 'ant-design-vue';
 import { LoadingOutlined } from '@ant-design/icons-vue'
 
-import { storagePresignedURL, profileUpdateAPI } from '@/utils/api'
+import { storagePresignedURL } from '@/api/storages'
+import { profileUpdateAPI } from '@/api/accounts'
 import { generateAvatar } from '@/utils/generators'
 import { getBase64 } from '@/utils/helpers'
 

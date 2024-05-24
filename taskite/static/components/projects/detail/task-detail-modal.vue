@@ -1,6 +1,6 @@
 <script setup>
 import { ref, onMounted, computed } from 'vue'
-import { taskDetailAPI, taskUpdateAPI } from '@/utils/api'
+import { taskUpdateAPI, taskDetailAPI } from '@/api/tasks'
 import { generateAvatar } from '@/utils/generators'
 
 import LoadingSpinner from '@/components/common/loading-spinner.vue'

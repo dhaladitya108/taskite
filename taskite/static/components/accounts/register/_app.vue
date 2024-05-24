@@ -1,7 +1,7 @@
 <script setup>
 import { reactive, ref } from 'vue'
 import { message } from 'ant-design-vue'
-import { registerAPI } from '@/utils/api'
+import { registerAPI } from '@/api/accounts'
 import { CloudServerOutlined } from '@ant-design/icons-vue'
 
 const registerForm = reactive({

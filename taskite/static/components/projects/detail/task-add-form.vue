@@ -2,7 +2,7 @@
 import { reactive } from 'vue'
 import { message } from 'ant-design-vue'
 
-import { taskAddAPI } from '@/utils/api'
+import { taskAddAPI } from '@/api/tasks'
 const props = defineProps(['projectId', 'stateId'])
 const emit = defineEmits(['newTaskAdded'])
 

@@ -1,11 +1,9 @@
 <script setup>
 import { ref, onMounted, computed, watch } from 'vue'
-import {
-  stateTaskListAPI,
-  projectMembersAPI,
-  taskUpdateAPI,
-  labelListAPI,
-} from '@/utils/api'
+import { labelListAPI } from '@/api/labels'
+import { taskUpdateAPI } from '@/api/tasks'
+import { stateTaskListAPI } from '@/api/states'
+import { projectMembersAPI } from '@/api/projects'
 import { VueDraggable } from 'vue-draggable-plus'
 // import { OnClickOutside } from '@vueuse/components'
 

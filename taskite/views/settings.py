@@ -16,8 +16,3 @@ class ProfileView(LoginRequiredMixin, View):
             }
         }
         return render(request, "settings/profile.html", context)
-
-
-class UsersView(LoginRequiredMixin, View):
-    def get(self, request):
-        return render(request, "settings/users.html")

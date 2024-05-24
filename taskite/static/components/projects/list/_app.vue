@@ -1,6 +1,6 @@
 <script setup>
 import { ref, onMounted } from 'vue'
-import { projectListAPI } from '@/utils/api'
+import { projectListAPI } from '@/api/projects'
 import DashboardLayout from '@/components/layouts/dashboard-layout.vue'
 import ProjectCard from '@/components/projects/list/project-card.vue'
 import ProjectAddModal from '@/components/projects/list/project-add-modal.vue'

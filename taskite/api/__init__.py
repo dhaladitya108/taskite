@@ -38,7 +38,7 @@ urlpatterns = [
     path("projects/<uuid:project_id>/members/", ProjectMembersAPIView.as_view()),
 
     path("projects/<uuid:project_id>/project_invites/", ProjectInviteListAPIView.as_view()),
-    path("projetcs/<uuid:project_id>/project_invites/<uuid:project_invite_id>/", ProjectInviteDestroyAPIView.as_view()),
+    path("projects/<uuid:project_id>/project_invites/<uuid:project_invite_id>/", ProjectInviteDestroyAPIView.as_view()),
     
     path("projects/<uuid:project_id>/project_members/", ProjectMembersListAPIView.as_view()),
     path("projects/<uuid:project_id>/project_members/invite/", ProjectMemberInvitesAPIView.as_view()),

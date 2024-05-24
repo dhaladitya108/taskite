@@ -1,6 +1,6 @@
 <script setup>
 import { reactive } from 'vue'
-import { projectCreateAPI } from '@/utils/api'
+import { projectCreateAPI } from '@/api/projects'
 
 const projectAddForm = reactive({
   name: '',

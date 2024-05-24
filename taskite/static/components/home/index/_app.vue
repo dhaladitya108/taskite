@@ -3,7 +3,7 @@ import { onMounted, ref } from 'vue'
 import { DownOutlined } from '@ant-design/icons-vue'
 
 import DashboardLayout from '@/components/layouts/dashboard-layout.vue'
-import { projectInvitesAPI } from '@/utils/api'
+import { projectInvitesAPI } from '@/api/projects'
 
 const props = defineProps(['user'])
 

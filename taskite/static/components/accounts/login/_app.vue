@@ -1,7 +1,7 @@
 <script setup>
 import { reactive, ref } from 'vue'
 import { message } from 'ant-design-vue'
-import { loginAPI } from '@/utils/api'
+import { loginAPI } from '@/api/accounts'
 import { LoginOutlined } from '@ant-design/icons-vue'
 
 const props = defineProps(['next'])

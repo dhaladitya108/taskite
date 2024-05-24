@@ -7,7 +7,8 @@ import {
   AlignLeftOutlined,
   SaveOutlined,
 } from '@ant-design/icons-vue'
-import { storagePresignedURL, projectUpdateAPI } from '@/utils/api'
+import { storagePresignedURL } from '@/api/storages'
+import { projectUpdateAPI } from '@/api/projects'
 import { generateAvatar } from '@/utils/generators'
 import { getBase64 } from '@/utils/helpers'
 

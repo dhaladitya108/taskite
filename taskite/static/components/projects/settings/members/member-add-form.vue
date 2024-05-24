@@ -1,6 +1,6 @@
 <script setup>
 import { reactive, ref } from 'vue'
-import { projectMemberInviteAPI } from '@/utils/api'
+import { projectMemberInviteAPI } from '@/api/projectMembers'
 import { message } from 'ant-design-vue'
 
 const props = defineProps(['projectId'])

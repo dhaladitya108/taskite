@@ -3,7 +3,8 @@ import { ref, onMounted, computed } from 'vue'
 
 import ProjectSettingsLayout from '@/components/layouts/project-settings-layout.vue'
 import MemberAddForm from '@/components/projects/settings/members/member-add-form.vue'
-import { projectMembersListAPI, projectMemberUpdateAPI, projectInviteListAPI } from '@/utils/api'
+import { projectMembersListAPI, projectMemberUpdateAPI } from '@/api/projectMembers'
+import { projectInviteDeleteAPI, projectInviteListAPI } from '@/api/projectInvites'
 import { generateAvatar } from '@/utils/generators'
 import {
   ProjectOutlined,
@@ -101,7 +102,12 @@ const getAvatar = (record) => {
 }
 
 const handleDeleteProjectInvite = async (projectInviteId) => {
-  console.log(projectInviteId)
+  try {
+    await projectInviteDeleteAPI(props.project.id, projectInviteId)
+    projectInvites.value = projectInvites.value.filter((project_invite) => project_invite.id !== projectInviteId)
+  } catch (error) {
+    console.log(error)
+  }
 }
 </script>
 
@@ -131,14 +137,22 @@ const handleDeleteProjectInvite = async (projectInviteId) => {
           Invite Member</a-button>
         <a-dropdown v-show="projectInvites.length > 0">
           <a-badge :count="projectInvites.length">
-            <a-button type="dashed" class="ml-2">Pending Invitations</a-button>
+            <a-button type="dashed" class="ml-2">Invitations</a-button>
           </a-badge>
 
           <template #overlay>
             <a-card size="small">
-              <div v-for="projectInvite in projectInvites" :key="projectInvite.id">{{ projectInvite.email }} <a-button
-                  type="link" :disabled="props.role !== 'admin'"
-                  @click="handleDeleteProjectInvite(projectInvite.id)">Delete</a-button></div>
+              <p class="text-base underline underline-offset-4">Pending Invitations</p>
+              <div v-for="projectInvite in projectInvites" :key="projectInvite.id"
+                class="flex justify-between items-center">
+                <div>{{ projectInvite.email }}</div>
+                <div>
+                  <a-button type="link" :disabled="props.role !== 'admin'"
+                    @click="handleDeleteProjectInvite(projectInvite.id)">
+                    <p class="text-red-400">Delete</p>
+                  </a-button>
+                </div>
+              </div>
             </a-card>
           </template>
         </a-dropdown>
