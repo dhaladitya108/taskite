@@ -3,6 +3,7 @@ import { reactive, ref } from 'vue'
 import { message } from 'ant-design-vue'
 import { loginAPI } from '@/api/accounts'
 import { LoginOutlined } from '@ant-design/icons-vue'
+import TaskiteLogo from '@/components/common/taskite-logo.vue'
 
 const props = defineProps(['next'])
 const loginForm = reactive({
@@ -27,8 +28,9 @@ const handleLogin = async (values) => {
 <template>
   <a-flex class="flex justify-center items-center h-screen">
     <div>
-      <div class="flex justify-center">
-        <p class="text-2xl font-bold">TasKite Cloud</p>
+      <div class="flex justify-center items-center mb-3 gap-2">
+        <taskite-logo></taskite-logo>
+        <div class="text-2xl font-bold">TasKite Cloud</div>
       </div>
       <a-card class="px-2 py-1 w-96">
         <a-flex justify="center">

@@ -147,11 +147,6 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 AUTH_USER_MODEL = "taskite.User"
 LOGIN_URL = "/accounts/login"
 
-ORGANIZATION_SETTINGS = {
-    "organization_name": "Acorn Globus",
-    "primary_color": "#1677ff",
-}
-
 def immutable_file_test(path, url):
     # Match vite (rollup)-generated hashes, à la, `some_file-CSliV9zW.js`
     return re.match(r"^.+[.-][0-9a-zA-Z_-]{8,12}\..+$", url)

@@ -10,7 +10,7 @@
     <link rel="shortcut icon" href="{% static 'images/favicon.ico' %}" type="image/x-icon">
     <title>
         {% block title %}
-        Taskite
+        TasKite
         {% endblock title %}
     </title>
     {% block style %}
@@ -32,7 +32,6 @@
     <div id="app">
     </div>
     {{ props|json_script:"props"}}
-    {{ organization_settings|json_script:"organization_settings" }}
 
     <!-- Additional scripts -->
     {% block script %}
