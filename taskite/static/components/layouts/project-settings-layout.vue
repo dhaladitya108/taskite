@@ -1,6 +1,11 @@
 <script setup>
 import DashboardLayout from '@/components/layouts/dashboard-layout.vue'
-import { AlignLeftOutlined, UserSwitchOutlined, DatabaseOutlined, HighlightOutlined } from '@ant-design/icons-vue';
+import {
+  AlignLeftOutlined,
+  UserSwitchOutlined,
+  DatabaseOutlined,
+  HighlightOutlined,
+} from '@ant-design/icons-vue'
 const props = defineProps(['page', 'projectSlug', 'themeColor'])
 
 import { ref } from 'vue'
@@ -14,7 +19,11 @@ const selectedKeys = ref([props.page])
 <template>
   <dashboard-layout page="projects" :themeColor="props.themeColor">
     <a-layout>
-      <a-layout-sider breakpoint="lg" collapsed-width="0" @collapse="onCollapse">
+      <a-layout-sider
+        breakpoint="lg"
+        collapsed-width="0"
+        @collapse="onCollapse"
+      >
         <!-- <div class="logo" /> -->
         <a-menu v-model:selectedKeys="selectedKeys" theme="dark" mode="inline">
           <a-menu-item key="general">
@@ -41,7 +50,9 @@ const selectedKeys = ref([props.page])
       </a-layout-sider>
       <a-layout>
         <a-layout-content :style="{ margin: '24px 16px 0' }">
-          <div :style="{ padding: '24px', background: '#fff', minHeight: '100vh' }">
+          <div
+            :style="{ padding: '24px', background: '#fff', minHeight: '100vh' }"
+          >
             <slot></slot>
           </div>
         </a-layout-content>
