@@ -39,8 +39,10 @@ const getAvatar = (record) => {
       <DownOutlined />
     </a-button>
     <template #overlay>
-      <a-card size="small" class="min-w-80 flex flex-row">
-
+      <div
+        size="small"
+        class="bg-white p-3 rounded-md shadow-md min-w-80 flex flex-col"
+      >
         <!-- Priorities -->
         <div class="w-full">
           <p class="text-sm font-medium tracking-wide">Priorities</p>
@@ -54,10 +56,10 @@ const getAvatar = (record) => {
           </a-checkbox-group>
         </div>
 
-        <div class="h-[1px] bg-gray-400 w-full"></div>
+        <div class="h-[1px] bg-gray-200 w-full my-3"></div>
 
         <!-- Assignees -->
-        <div class="mt-3">
+        <div>
           <p class="text-sm font-medium tracking-wide">Assignees</p>
           <a-checkbox-group v-model:value="selectedAssignees">
             <a-flex vertical>
@@ -66,7 +68,7 @@ const getAvatar = (record) => {
             </a-flex>
           </a-checkbox-group>
         </div>
-      </a-card>
+      </div>
     </template>
   </a-dropdown>
 </template>
