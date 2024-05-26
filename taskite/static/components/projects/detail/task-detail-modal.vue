@@ -87,7 +87,6 @@ const assigneeOptions = props.members.map((member) => {
     avatar: !!member.avatar ? member.avatar : generateAvatar(member.fullName),
   }
 })
-
 </script>
 
 <template>
@@ -101,24 +100,40 @@ const assigneeOptions = props.members.map((member) => {
       </a-breadcrumb-item>
     </a-breadcrumb>
 
-    <a-input size="large" v-model:value="name" :bordered="bordered" @focus="() => (bordered = true)"
-      @blur="handleNameUpdate"></a-input>
+    <a-input
+      size="large"
+      v-model:value="name"
+      :bordered="bordered"
+      @focus="() => (bordered = true)"
+      @blur="handleNameUpdate"
+    ></a-input>
     <a-row :gutter="16">
       <a-col :span="16">
         <div>Description</div>
-        <base-editor v-model="description" @blur="handleDescriptionUpdate"></base-editor>
+        <base-editor
+          v-model="description"
+          @blur="handleDescriptionUpdate"
+        ></base-editor>
       </a-col>
       <a-col :span="8">
         <a-flex>
-          <a-form layout="vertical" :wrapper-col="{
-            span: 14,
-          }" :label-col="{
+          <a-form
+            layout="vertical"
+            :wrapper-col="{
+              span: 14,
+            }"
+            :label-col="{
               style: {
                 width: '120px',
               },
-            }">
+            }"
+          >
             <a-form-item label="Priority">
-              <a-select ref="select" v-model:value="task.priority" @change="handlePriorityChange">
+              <a-select
+                ref="select"
+                v-model:value="task.priority"
+                @change="handlePriorityChange"
+              >
                 <a-select-option value="low">Low</a-select-option>
                 <a-select-option value="medium">Medium</a-select-option>
                 <a-select-option value="high">High</a-select-option>
@@ -127,7 +142,11 @@ const assigneeOptions = props.members.map((member) => {
             </a-form-item>
 
             <a-form-item label="Task type">
-              <a-select ref="select" v-model:value="task.taskType" @change="handleTaskTypeChange">
+              <a-select
+                ref="select"
+                v-model:value="task.taskType"
+                @change="handleTaskTypeChange"
+              >
                 <a-select-option value="issue">Issue</a-select-option>
                 <a-select-option value="task">Task</a-select-option>
                 <a-select-option value="story">Story</a-select-option>
@@ -137,13 +156,21 @@ const assigneeOptions = props.members.map((member) => {
             </a-form-item>
 
             <a-form-item label="Assignee">
-              <a-select v-model:value="assigneeIds" mode="multiple" option-label-prop="children"
-                @change="handleAssigneeChange" style="width: 150px" :options="assigneeOptions">
+              <a-select
+                v-model:value="assigneeIds"
+                mode="multiple"
+                option-label-prop="children"
+                @change="handleAssigneeChange"
+                style="width: 150px"
+                :options="assigneeOptions"
+              >
                 <template #option="{ value: val, label, avatar }">
                   <a-avatar :src="avatar" size="small"></a-avatar>
-                  <span style="margin-left: 7px;">{{ label }}</span>
+                  <span style="margin-left: 7px">{{ label }}</span>
                 </template>
-                <template #tagRender="{ value: val, label, closable, onClose, option }">
+                <template
+                  #tagRender="{ value: val, label, closable, onClose, option }"
+                >
                   <a-avatar-group :closable="closable" @close="onClose">
                     <a-avatar :src="option.avatar" size="small"></a-avatar>
                   </a-avatar-group>

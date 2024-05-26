@@ -30,8 +30,18 @@ const onFinishFailed = (errorInfo) => {
 
 <template>
   <a-card id="task-card" size="small">
-    <a-form layout="vertical" name="taskForm" :model="task_form" @finish="onFinish" @finishFailed="onFinishFailed">
-      <a-form-item label="Task name" name="name" :rules="[{ required: true, message: 'Please enter task name!' }]">
+    <a-form
+      layout="vertical"
+      name="taskForm"
+      :model="task_form"
+      @finish="onFinish"
+      @finishFailed="onFinishFailed"
+    >
+      <a-form-item
+        label="Task name"
+        name="name"
+        :rules="[{ required: true, message: 'Please enter task name!' }]"
+      >
         <a-input v-model:value="task_form.name"></a-input>
       </a-form-item>
 

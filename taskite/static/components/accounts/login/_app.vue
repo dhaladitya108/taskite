@@ -36,16 +36,35 @@ const handleLogin = async (values) => {
         <a-flex justify="center">
           <p class="text-2xl font-medium">Log in</p>
         </a-flex>
-        <a-form :model="loginForm" layout="vertical" @finish="handleLogin" hideRequiredMark>
-          <a-form-item label="Email" name="email" :rules="[{ required: true, message: 'Please input your email!' }]">
+        <a-form
+          :model="loginForm"
+          layout="vertical"
+          @finish="handleLogin"
+          hideRequiredMark
+        >
+          <a-form-item
+            label="Email"
+            name="email"
+            :rules="[{ required: true, message: 'Please input your email!' }]"
+          >
             <a-input v-model:value="loginForm.email" />
           </a-form-item>
-          <a-form-item label="Password" name="password"
-            :rules="[{ required: true, message: 'Please input your password!' }]">
+          <a-form-item
+            label="Password"
+            name="password"
+            :rules="[
+              { required: true, message: 'Please input your password!' },
+            ]"
+          >
             <a-input-password v-model:value="loginForm.password" />
           </a-form-item>
           <a-form-item>
-            <a-button :loading="loading" type="primary" html-type="submit" class="w-full">
+            <a-button
+              :loading="loading"
+              type="primary"
+              html-type="submit"
+              class="w-full"
+            >
               Login
               <template #icon>
                 <LoginOutlined />
@@ -54,7 +73,12 @@ const handleLogin = async (values) => {
           </a-form-item>
         </a-form>
         <div class="flex justify-center">
-          <p>Don't have an account ? <a class="hover:underline" href="/accounts/register/">Create an account</a></p>
+          <p>
+            Don't have an account ?
+            <a class="hover:underline" href="/accounts/register/"
+              >Create an account</a
+            >
+          </p>
         </div>
         <!-- <hr class="border border-dashed h-px border-gray-400"> -->
         <div class="flex justify-center">
@@ -67,5 +91,4 @@ const handleLogin = async (values) => {
   </a-flex>
 </template>
 
-<style scoped>
-</style>
+<style scoped></style>

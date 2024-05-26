@@ -57,8 +57,12 @@ const theme = computed(() => {
                 <span>Settings</span>
               </span>
             </template>
-            <a-menu-item key="settings-profile"><a href="/settings/profile/">Profile</a></a-menu-item>
-            <a-menu-item key="settings-preferences" disabled>Preferences</a-menu-item>
+            <a-menu-item key="settings-profile"
+              ><a href="/settings/profile/">Profile</a></a-menu-item
+            >
+            <a-menu-item key="settings-preferences" disabled
+              >Preferences</a-menu-item
+            >
           </a-sub-menu>
           <a-menu-item key="logout">
             <a href="/accounts/logout/">

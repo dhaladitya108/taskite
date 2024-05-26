@@ -1,6 +1,6 @@
 <script setup>
 import { ref, onMounted, computed } from 'vue'
-import { message } from 'ant-design-vue';
+import { message } from 'ant-design-vue'
 import { LoadingOutlined } from '@ant-design/icons-vue'
 
 import { storagePresignedURL } from '@/api/storages'
@@ -20,23 +20,23 @@ const loading = ref(false)
 const uploadDataParams = ref({})
 const uploadUrl = ref('')
 
-const handleChange = info => {
+const handleChange = (info) => {
   if (info.file.status === 'uploading') {
-    imageLoading.value = true;
-    return;
+    imageLoading.value = true
+    return
   }
   if (info.file.status === 'done') {
     // Get this url from response in real world.
-    getBase64(info.file.originFileObj, base64Url => {
-      profileForm.value.avatarUrl = base64Url;
-      imageLoading.value = false;
-    });
+    getBase64(info.file.originFileObj, (base64Url) => {
+      profileForm.value.avatarUrl = base64Url
+      imageLoading.value = false
+    })
   }
   if (info.file.status === 'error') {
-    imageLoading.value = false;
-    message.error('upload error');
+    imageLoading.value = false
+    message.error('upload error')
   }
-};
+}
 
 const handleAvatarUpload = (file) => {
   return new Promise(async (resolve) => {
@@ -89,8 +89,15 @@ const avatarImageUrl = computed(() => {
       <a-flex justify="center">
         <a-form :model="profileForm" layout="vertical" @finish="updateProfile">
           <a-form-item name="avatar" v-model="profileForm.avatar">
-            <a-upload :multiple="false" :show-upload-list="false" name="file" :action="uploadUrl"
-              :data="uploadDataParams" :before-upload="handleAvatarUpload" @change="handleChange">
+            <a-upload
+              :multiple="false"
+              :show-upload-list="false"
+              name="file"
+              :action="uploadUrl"
+              :data="uploadDataParams"
+              :before-upload="handleAvatarUpload"
+              @change="handleChange"
+            >
               <a-avatar v-if="imageLoading" shape="square" :size="72">
                 <template #icon>
                   <LoadingOutlined />
@@ -130,7 +137,9 @@ const avatarImageUrl = computed(() => {
           </a-row>
 
           <a-form-item>
-            <a-button :loading="loading" type="primary" html-type="submit">Save changes</a-button>
+            <a-button :loading="loading" type="primary" html-type="submit"
+              >Save changes</a-button
+            >
           </a-form-item>
         </a-form>
       </a-flex>
